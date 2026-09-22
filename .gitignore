@@ -9,6 +9,8 @@ __pycache__/
 *.py[cod]
 .venv/
 env/
+node_modules/
+dist/
 
 # OS 및 에디터 임시 파일
 .DS_Store

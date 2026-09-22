@@ -93,90 +93,35 @@
       position: relative;
       min-height: 460px;
       overflow: hidden;
-      padding: 28px;
+      padding: 0;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background:
-        linear-gradient(120deg, transparent 46%, rgba(228, 94, 62, 0.14) 46%, rgba(228, 94, 62, 0.14) 48%, transparent 48%),
-        linear-gradient(28deg, transparent 48%, rgba(23, 33, 27, 0.08) 48%, rgba(23, 33, 27, 0.08) 49%, transparent 49%),
-        var(--mint);
+      background: var(--mint);
     }
 
     .map-preview::before,
     .map-preview::after {
-      position: absolute;
-      content: "";
-      background: rgba(255, 253, 247, 0.65);
-      transform: rotate(-28deg);
+      display: none;
     }
 
-    .map-preview::before {
-      width: 130%;
-      height: 18px;
-      top: 42%;
-      left: -15%;
+    #map {
+      width: 100%;
+      height: 100%;
+      min-height: 460px;
     }
 
-    .map-preview::after {
-      width: 130%;
-      height: 11px;
-      top: 66%;
-      left: -15%;
-      transform: rotate(24deg);
-    }
-
-    .preview-label {
+    .map-status {
       position: relative;
       z-index: 1;
-      display: inline-block;
+      position: absolute;
+      top: 16px;
+      left: 16px;
       padding: 10px 14px;
       border: 1px solid rgba(23, 33, 27, 0.15);
       border-radius: 999px;
       background: rgba(255, 253, 247, 0.86);
       font-size: 0.8rem;
       font-weight: 800;
-    }
-
-    .pin {
-      position: absolute;
-      z-index: 1;
-      width: 18px;
-      height: 18px;
-      border: 4px solid var(--panel);
-      border-radius: 50%;
-      background: var(--accent);
-      box-shadow: 0 5px 12px rgba(23, 33, 27, 0.2);
-    }
-
-    .pin-one { top: 34%; left: 28%; }
-    .pin-two { top: 58%; left: 62%; background: #315d49; }
-    .pin-three { top: 72%; left: 39%; background: #d5a832; }
-
-    .card {
-      position: absolute;
-      right: 28px;
-      bottom: 28px;
-      left: 28px;
-      z-index: 1;
-      padding: 20px;
-      border: 1px solid rgba(23, 33, 27, 0.12);
-      border-radius: 8px;
-      background: rgba(255, 253, 247, 0.92);
-    }
-
-    .card strong,
-    .card span {
-      display: block;
-    }
-
-    .card strong {
-      margin-bottom: 8px;
-      font-size: 1.1rem;
-    }
-
-    .card span {
-      color: var(--muted);
-      font-size: 0.9rem;
     }
 
     @media (max-width: 760px) {
@@ -218,21 +163,16 @@
         <h1>오늘의 팝업,<br>다음 코스.</h1>
         <p class="intro">
           성수와 홍대의 팝업스토어, 축제, 핫플레이스를 지도 위에서 발견하는 큐레이션 서비스입니다.
-          곧 실제 장소 데이터와 카카오 지도를 연결합니다.
+          카카오 지도 위에 실제 장소 데이터를 차곡차곡 연결합니다.
         </p>
       </section>
 
       <section class="map-preview" aria-label="지도 미리보기">
-        <span class="preview-label">MAP DATA LOADING SOON</span>
-        <span class="pin pin-one" aria-hidden="true"></span>
-        <span class="pin pin-two" aria-hidden="true"></span>
-        <span class="pin pin-three" aria-hidden="true"></span>
-        <div class="card">
-          <strong>성수 팝업 스튜디오</strong>
-          <span>서울 성동구 · popup · 실내</span>
-        </div>
+        <div id="map" aria-label="서울 지역 팝업스토어 지도"></div>
+        <span id="map-status" class="map-status">MAP LOADING</span>
       </section>
     </main>
   </div>
+  <script type="module" src="/main.js"></script>
 </body>
 </html>
