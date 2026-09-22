@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="서울의 팝업스토어와 핫플레이스를 한눈에 보는 Pop-Course">
+  <title>Pop-Course | 팝업과 핫플 지도</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #17211b;
+      --muted: #647066;
+      --paper: #f7f4ec;
+      --panel: #fffdf7;
+      --line: #d7ddd4;
+      --accent: #e45e3e;
+      --accent-dark: #b6412a;
+      --mint: #d9eee1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--paper);
+      font-family: "Malgun Gothic", "Apple SD Gothic Neo", sans-serif;
+    }
+
+    .shell {
+      width: min(1120px, calc(100% - 40px));
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 28px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand {
+      color: var(--ink);
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-decoration: none;
+    }
+
+    .status {
+      color: var(--accent-dark);
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+      min-height: calc(100vh - 105px);
+      padding: 72px 0;
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--accent-dark);
+      font-size: 0.8rem;
+      font-weight: 800;
+      letter-spacing: 0.16em;
+    }
+
+    h1 {
+      max-width: 620px;
+      margin: 0;
+      font-size: clamp(3rem, 7vw, 6.4rem);
+      line-height: 0.98;
+      letter-spacing: -0.06em;
+    }
+
+    .intro {
+      max-width: 510px;
+      margin: 28px 0 0;
+      color: var(--muted);
+      font-size: 1.08rem;
+      line-height: 1.8;
+    }
+
+    .map-preview {
+      position: relative;
+      min-height: 460px;
+      overflow: hidden;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(120deg, transparent 46%, rgba(228, 94, 62, 0.14) 46%, rgba(228, 94, 62, 0.14) 48%, transparent 48%),
+        linear-gradient(28deg, transparent 48%, rgba(23, 33, 27, 0.08) 48%, rgba(23, 33, 27, 0.08) 49%, transparent 49%),
+        var(--mint);
+    }
+
+    .map-preview::before,
+    .map-preview::after {
+      position: absolute;
+      content: "";
+      background: rgba(255, 253, 247, 0.65);
+      transform: rotate(-28deg);
+    }
+
+    .map-preview::before {
+      width: 130%;
+      height: 18px;
+      top: 42%;
+      left: -15%;
+    }
+
+    .map-preview::after {
+      width: 130%;
+      height: 11px;
+      top: 66%;
+      left: -15%;
+      transform: rotate(24deg);
+    }
+
+    .preview-label {
+      position: relative;
+      z-index: 1;
+      display: inline-block;
+      padding: 10px 14px;
+      border: 1px solid rgba(23, 33, 27, 0.15);
+      border-radius: 999px;
+      background: rgba(255, 253, 247, 0.86);
+      font-size: 0.8rem;
+      font-weight: 800;
+    }
+
+    .pin {
+      position: absolute;
+      z-index: 1;
+      width: 18px;
+      height: 18px;
+      border: 4px solid var(--panel);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 5px 12px rgba(23, 33, 27, 0.2);
+    }
+
+    .pin-one { top: 34%; left: 28%; }
+    .pin-two { top: 58%; left: 62%; background: #315d49; }
+    .pin-three { top: 72%; left: 39%; background: #d5a832; }
+
+    .card {
+      position: absolute;
+      right: 28px;
+      bottom: 28px;
+      left: 28px;
+      z-index: 1;
+      padding: 20px;
+      border: 1px solid rgba(23, 33, 27, 0.12);
+      border-radius: 8px;
+      background: rgba(255, 253, 247, 0.92);
+    }
+
+    .card strong,
+    .card span {
+      display: block;
+    }
+
+    .card strong {
+      margin-bottom: 8px;
+      font-size: 1.1rem;
+    }
+
+    .card span {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 760px) {
+      .shell {
+        width: min(100% - 28px, 560px);
+      }
+
+      header {
+        padding: 20px 0;
+      }
+
+      main {
+        grid-template-columns: 1fr;
+        gap: 36px;
+        min-height: auto;
+        padding: 60px 0;
+      }
+
+      h1 {
+        font-size: clamp(3.2rem, 17vw, 5.4rem);
+      }
+
+      .map-preview {
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <a class="brand" href="/">POP-COURSE</a>
+      <span class="status">MAP EXPERIENCE / BUILDING</span>
+    </header>
+
+    <main>
+      <section>
+        <p class="eyebrow">SEOUL, FIND YOUR NEXT STOP</p>
+        <h1>오늘의 팝업,<br>다음 코스.</h1>
+        <p class="intro">
+          성수와 홍대의 팝업스토어, 축제, 핫플레이스를 지도 위에서 발견하는 큐레이션 서비스입니다.
+          곧 실제 장소 데이터와 카카오 지도를 연결합니다.
+        </p>
+      </section>
+
+      <section class="map-preview" aria-label="지도 미리보기">
+        <span class="preview-label">MAP DATA LOADING SOON</span>
+        <span class="pin pin-one" aria-hidden="true"></span>
+        <span class="pin pin-two" aria-hidden="true"></span>
+        <span class="pin pin-three" aria-hidden="true"></span>
+        <div class="card">
+          <strong>성수 팝업 스튜디오</strong>
+          <span>서울 성동구 · popup · 실내</span>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

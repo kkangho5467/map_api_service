@@ -2,6 +2,7 @@
 .env
 .env.local
 supabasepw.md
+PROGRESS_LOG.md
 
 # Python 및 캐시 관련 파일
 __pycache__/
