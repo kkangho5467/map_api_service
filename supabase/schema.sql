@@ -69,6 +69,17 @@ from (
             null::date,
             array['성수', '브런치', '데이트']::text[],
             null::text
+        ),
+        (
+            '버터스카이'::text,
+            'hotplace'::text,
+            37.2727538::double precision,
+            127.0514577::double precision,
+            '경기 수원시 영통구 매봉로49번길 51 1층'::text,
+            null::date,
+            null::date,
+            array['매탄동', '수원카페', '디저트카페', '수제디저트', '반려동물 동반', '주차 불가']::text[],
+            null::text
         )
 ) as sample(name, category, lat, lng, address, start_date, end_date, tags, image_url)
 where not exists (
