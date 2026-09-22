@@ -56,15 +56,29 @@ kakaoScript.addEventListener('load', () => {
         const infoWindow = new window.kakao.maps.InfoWindow({
           content: `<div style="padding:8px 12px; white-space:nowrap;">${place.name}<br><small>${categoryNames[place.category] ?? place.category}</small></div>`,
         });
+        let isInfoWindowOpen = false;
 
         // 마커에 마우스를 올리면 장소 이름과 카테고리를 표시합니다.
         window.kakao.maps.event.addListener(marker, 'mouseover', () => {
           infoWindow.open(map, marker);
+          isInfoWindowOpen = true;
         });
 
         // 마우스가 마커를 벗어나면 정보창을 닫습니다.
         window.kakao.maps.event.addListener(marker, 'mouseout', () => {
           infoWindow.close();
+          isInfoWindowOpen = false;
+        });
+
+        // 모바일처럼 호버가 없는 환경에서는 마커를 탭해 장소 정보를 표시합니다.
+        window.kakao.maps.event.addListener(marker, 'click', () => {
+          if (isInfoWindowOpen) {
+            infoWindow.close();
+            isInfoWindowOpen = false;
+          } else {
+            infoWindow.open(map, marker);
+            isInfoWindowOpen = true;
+          }
         });
 
         bounds.extend(position);
