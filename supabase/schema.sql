@@ -34,40 +34,49 @@ create index if not exists reviews_place_id_idx on public.reviews(place_id);
 -- 개발 초기에 화면과 API를 확인할 수 있도록 테스트 장소를 입력합니다.
 insert into public.places
     (name, category, lat, lng, address, start_date, end_date, tags, image_url)
-values
-    (
-        '성수 팝업 스튜디오',
-        'popup',
-        37.5446,
-        127.0561,
-        '서울특별시 성동구 성수이로 24길',
-        '2026-09-01',
-        '2026-10-15',
-        array['실내', '성수', '사진']::text[],
-        null
-    ),
-    (
-        '홍대 거리 예술 축제',
-        'festival',
-        37.5563,
-        126.9236,
-        '서울특별시 마포구 홍익로 일대',
-        '2026-10-03',
-        '2026-10-05',
-        array['야외', '홍대', '공연']::text[],
-        null
-    ),
-    (
-        '서울숲 브런치 핫플',
-        'hotplace',
-        37.5445,
-        127.0374,
-        '서울특별시 성동구 서울숲2길',
-        null,
-        null,
-        array['성수', '브런치', '데이트']::text[],
-        null
-    );
+select *
+from (
+    values
+        (
+            '성수 팝업 스튜디오'::text,
+            'popup'::text,
+            37.5446::double precision,
+            127.0561::double precision,
+            '서울특별시 성동구 성수이로 24길'::text,
+            '2026-09-01'::date,
+            '2026-10-15'::date,
+            array['실내', '성수', '사진']::text[],
+            null::text
+        ),
+        (
+            '홍대 거리 예술 축제'::text,
+            'festival'::text,
+            37.5563::double precision,
+            126.9236::double precision,
+            '서울특별시 마포구 홍익로 일대'::text,
+            '2026-10-03'::date,
+            '2026-10-05'::date,
+            array['야외', '홍대', '공연']::text[],
+            null::text
+        ),
+        (
+            '서울숲 브런치 핫플'::text,
+            'hotplace'::text,
+            37.5445::double precision,
+            127.0374::double precision,
+            '서울특별시 성동구 서울숲2길'::text,
+            null::date,
+            null::date,
+            array['성수', '브런치', '데이트']::text[],
+            null::text
+        )
+) as sample(name, category, lat, lng, address, start_date, end_date, tags, image_url)
+where not exists (
+    select 1
+    from public.places as existing
+    where existing.name = sample.name
+      and existing.category = sample.category
+);
 
 -- 첫 번째 장소에 연결되는 테스트 리뷰를 입력합니다.
 insert into public.reviews
