@@ -1,6 +1,7 @@
 # 환경변수 파일 (절대 깃허브에 올라가면 안 됨)
 .env
 .env.local
+supabasepw.md
 
 # Python 및 캐시 관련 파일
 __pycache__/
