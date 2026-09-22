@@ -32,53 +32,51 @@ create index if not exists places_category_idx on public.places(category);
 create index if not exists reviews_place_id_idx on public.reviews(place_id);
 
 -- 개발 초기에 화면과 API를 확인할 수 있도록 테스트 장소를 입력합니다.
+-- 기존 초기 샘플을 제거해 행궁동 중심 데이터만 남깁니다.
+delete from public.places
+where name in (
+    '성수 팝업 스튜디오',
+    '홍대 거리 예술 축제',
+    '서울숲 브런치 핫플',
+    '버터스카이'
+);
+
 insert into public.places
     (name, category, lat, lng, address, start_date, end_date, tags, image_url)
 select *
 from (
     values
         (
-            '성수 팝업 스튜디오'::text,
-            'popup'::text,
-            37.5446::double precision,
-            127.0561::double precision,
-            '서울특별시 성동구 성수이로 24길'::text,
-            '2026-09-01'::date,
-            '2026-10-15'::date,
-            array['실내', '성수', '사진']::text[],
+            '버건디 행궁'::text,
+            'restaurant'::text,
+            37.2866350::double precision,
+            127.0130833::double precision,
+            '경기 수원시 팔달구 신풍로63번길 11-3 1층'::text,
+            null::date,
+            null::date,
+            array['행궁동', '양식', '데이트', '주차 불가', '공영주차장 이용']::text[],
             null::text
         ),
         (
-            '홍대 거리 예술 축제'::text,
+            '2026 정조대왕 능행차'::text,
             'festival'::text,
-            37.5563::double precision,
-            126.9236::double precision,
-            '서울특별시 마포구 홍익로 일대'::text,
-            '2026-10-03'::date,
-            '2026-10-05'::date,
-            array['야외', '홍대', '공연']::text[],
+            37.2818419::double precision,
+            127.0137108::double precision,
+            '경기 수원시 팔달구 정조로 825 화성행궁 일대'::text,
+            null::date,
+            null::date,
+            array['행궁동', '전통문화', '퍼레이드', '접근성', '주차 혼잡 예상']::text[],
             null::text
         ),
         (
-            '서울숲 브런치 핫플'::text,
-            'hotplace'::text,
-            37.5445::double precision,
-            127.0374::double precision,
-            '서울특별시 성동구 서울숲2길'::text,
+            '설빙 수원행리단길행궁점'::text,
+            'cafe'::text,
+            37.2854881::double precision,
+            127.0140943::double precision,
+            '경기 수원시 팔달구 신풍로 48-12 3층'::text,
             null::date,
             null::date,
-            array['성수', '브런치', '데이트']::text[],
-            null::text
-        ),
-        (
-            '버터스카이'::text,
-            'hotplace'::text,
-            37.2727538::double precision,
-            127.0514577::double precision,
-            '경기 수원시 영통구 매봉로49번길 51 1층'::text,
-            null::date,
-            null::date,
-            array['매탄동', '수원카페', '디저트카페', '수제디저트', '반려동물 동반', '주차 불가']::text[],
+            array['행궁동', '행리단길', '디저트카페', '주차 가능', '접근성']::text[],
             null::text
         )
 ) as sample(name, category, lat, lng, address, start_date, end_date, tags, image_url)
@@ -94,14 +92,14 @@ insert into public.reviews
     (place_id, title, link, snippet, published_date)
 select
     place.id,
-    '성수 팝업 스튜디오 방문 후기',
-    'https://example.com/reviews/seongsu-popup',
-    '공간 구성과 체험 동선이 좋았던 팝업스토어 후기입니다.',
-    '2026-09-10'
+    '버건디 행궁 방문 후기',
+    'https://place.map.kakao.com/1789547584',
+    '행궁동 데이트에 어울리는 분위기 좋은 양식 맛집입니다.',
+    null
 from public.places as place
-where place.name = '성수 팝업 스튜디오'
+where place.name = '버건디 행궁'
   and not exists (
       select 1
       from public.reviews as review
-      where review.link = 'https://example.com/reviews/seongsu-popup'
+      where review.link = 'https://place.map.kakao.com/1789547584'
   );
