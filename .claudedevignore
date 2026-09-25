@@ -1,0 +1,7 @@
+# 크레딧 절약을 위한 ignore 파일
+node_modules/
+dist/
+build/
+.git/
+*.log
+.env

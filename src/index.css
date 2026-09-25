@@ -1,0 +1,530 @@
+/* ───────── 1. 디자인 토큰(색상·크기 변수) ───────── */
+:root {
+  color-scheme: dark;
+  --ink: #f5f1e8;          /* 기본 글자색 */
+  --muted: #a8b0ae;        /* 보조 글자색 */
+  --paper: #111817;        /* 앱 배경 */
+  --panel: #18211f;        /* 시트(카드) 배경 */
+  --panel-soft: #202b28;   /* 선택된 카드 배경 */
+  --line: #30403b;         /* 구분선 */
+  --accent: #f1b56a;       /* 강조색(버튼, 선택된 필터) */
+  --blue: #88b9c7;
+  --tabbar-h: 64px;        /* 하단 탭 바 높이 */
+  --sheet-peek: 168px;     /* 목록 시트가 접혔을 때 보이는 높이 */
+  /* 아이폰 홈바 영역 높이(없는 기기는 0) */
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-top: env(safe-area-inset-top, 0px);
+}
+
+* {
+  box-sizing: border-box;
+  /* 모바일에서 버튼을 탭할 때 생기는 파란 하이라이트 박스를 없앱니다. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 앱은 화면 한 장에 고정되고, 스크롤은 목록 시트 안에서만 일어나도록 막아 둡니다. */
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
+body {
+  color: var(--ink);
+  background: #0a0f0e;
+  font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  /* 당겨서 새로고침(바운스) 동작이 지도 조작을 방해하지 않게 합니다. */
+  overscroll-behavior: none;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+}
+
+/* ───────── 2. 앱 프레임 ───────── */
+/* PC에서 열어도 휴대폰 화면처럼 보이도록 최대 폭을 480px로 제한하고 가운데 정렬합니다. */
+.app {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  height: 100dvh; /* dvh: 모바일 주소창이 나타나고 사라져도 실제 보이는 높이에 맞춥니다. */
+  margin: 0 auto;
+  overflow: hidden;
+  background: var(--paper);
+}
+
+/* 지도는 앱 전체를 채우는 '바닥 레이어'입니다. 나머지 UI는 모두 그 위에 떠 있습니다. */
+#map {
+  position: absolute;
+  inset: 0;
+}
+
+/* ───────── 3. 상단 바 (로고 + 지역 + 필터) ───────── */
+.top-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  padding: calc(12px + var(--safe-top)) 16px 0;
+  /* 위쪽을 살짝 어둡게 그라데이션 처리해 지도 위에서도 글자가 잘 보이게 합니다. */
+  background: linear-gradient(to bottom, rgba(17, 24, 23, 0.92) 55%, rgba(17, 24, 23, 0));
+  pointer-events: none; /* 투명 영역을 터치해도 지도가 움직이도록 통과시킵니다. */
+}
+
+/* 실제 버튼이 있는 부분만 다시 터치를 받도록 켭니다. */
+.top-bar > * {
+  pointer-events: auto;
+}
+
+.top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.brand span {
+  color: var(--accent);
+}
+
+.area-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* 필터 칩: 가로로 스크롤되는 한 줄. 스크롤바는 숨깁니다. */
+.filters {
+  display: flex;
+  gap: 8px;
+  margin: 12px -16px 0;
+  padding: 0 16px 12px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.filters::-webkit-scrollbar {
+  display: none;
+}
+
+.filter {
+  flex: 0 0 auto;
+  min-height: 36px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--ink);
+  background: rgba(24, 33, 31, 0.95);
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+}
+
+.filter[aria-selected="true"] {
+  border-color: var(--accent);
+  color: #211a12;
+  background: var(--accent);
+  font-weight: 800;
+}
+
+/* 지도 로딩 상태 표시(작은 알약 모양) */
+.map-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  color: #18211f;
+  background: rgba(255, 253, 247, 0.9);
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+/* ───────── 4. 목록 바텀 시트 ───────── */
+/* 기본은 '접힘' 상태: 시트를 아래로 밀어서 윗부분(--sheet-peek)만 보이게 합니다. */
+.list-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--tabbar-h) + var(--safe-bottom));
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  height: 72dvh;
+  border-radius: 20px 20px 0 0;
+  background: var(--panel);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.35);
+  transform: translateY(calc(100% - var(--sheet-peek)));
+  transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+/* 펼침 상태: 제자리로 올라옵니다. (main.js가 is-expanded 클래스를 붙였다 뗐다 합니다) */
+.list-sheet.is-expanded {
+  transform: translateY(0);
+}
+
+/* 손잡이 영역: 탭하거나 위/아래로 쓸어서 시트를 여닫습니다. */
+.sheet-handle {
+  flex: 0 0 auto;
+  width: 100%;
+  padding: 10px 20px 12px;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+  touch-action: none; /* 브라우저 기본 스크롤 대신 우리 코드가 스와이프를 처리합니다. */
+}
+
+/* 손잡이 위의 회색 막대(바텀 시트임을 알려주는 표준 모양) */
+.sheet-handle::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 12px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.sheet-title {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.sheet-heading {
+  font-size: 1.1rem;
+  letter-spacing: -0.02em;
+}
+
+.sheet-count {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.place-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 12px 16px;
+  overscroll-behavior: contain; /* 목록 끝에서 스크롤이 지도/페이지로 번지지 않게 합니다. */
+}
+
+.place-card {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--panel);
+  text-align: left;
+  cursor: pointer;
+  transition: background 160ms ease, transform 120ms ease;
+}
+
+/* 손가락으로 누르는 동안 살짝 눌리는 느낌(앱 버튼 피드백) */
+.place-card:active {
+  transform: scale(0.98);
+}
+
+.place-card.is-active {
+  border-color: var(--accent);
+  background: var(--panel-soft);
+}
+
+.place-card strong,
+.place-card span {
+  display: block;
+}
+
+.place-card strong {
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.place-card .address {
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.place-card .tagline {
+  margin-top: 8px;
+  color: var(--accent);
+  font-size: 0.74rem;
+}
+
+.place-card .traffic {
+  align-self: start;
+  color: var(--blue);
+  font-size: 0.7rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+/* ───────── 5. 상세 모달(바텀 시트) ───────── */
+/* 뒤쪽 반투명 배경: 누르면 모달이 닫힙니다. */
+.backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 40;
+  background: rgba(0, 0, 0, 0.45);
+  opacity: 0;
+  pointer-events: none; /* 닫혀 있을 땐 터치를 막지 않도록 */
+  transition: opacity 240ms ease;
+}
+
+.backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 기본은 화면 아래로 완전히 숨겨 두고(translateY 100%), 열리면 위로 슬라이드됩니다. */
+.detail-sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  max-height: 85dvh;
+  border-radius: 22px 22px 0 0;
+  background: var(--panel);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(100%);
+  transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  visibility: hidden; /* 닫힌 상태에서 스크린리더/탭 이동에 잡히지 않게 */
+}
+
+.detail-sheet.is-open {
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.detail-head {
+  position: relative;
+  flex: 0 0 auto;
+  padding: 10px 20px 0;
+  touch-action: none;
+}
+
+.detail-head::before {
+  content: "";
+  display: block;
+  width: 40px;
+  height: 4px;
+  margin: 0 auto 14px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+/* 닫기(X) 버튼: 손가락으로 누르기 쉽도록 44px 이상 크기를 확보합니다. */
+.detail-close {
+  position: absolute;
+  top: 14px;
+  right: 12px;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* 내용이 길면 이 부분만 스크롤되고, 아래 버튼 영역은 항상 고정됩니다. */
+.detail-body {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 0 20px 16px;
+  overscroll-behavior: contain;
+}
+
+.detail-kicker {
+  margin: 0 0 8px;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+.detail-body h2 {
+  margin: 0;
+  padding-right: 40px; /* 닫기 버튼과 제목이 겹치지 않게 */
+  font-size: 1.5rem;
+  letter-spacing: -0.03em;
+}
+
+.detail-address {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 14px;
+}
+
+.detail-tag {
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+/* 혼잡도·교통·접근성 3칸을 한 줄에 나란히 배치 */
+.insight-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.insight {
+  padding: 12px 10px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--panel-soft);
+}
+
+.insight-label,
+.insight-value {
+  display: block;
+}
+
+.insight-label {
+  color: var(--muted);
+  font-size: 0.68rem;
+}
+
+.insight-value {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1.35;
+}
+
+.detail-note {
+  margin-top: 18px;
+  padding: 14px;
+  border-radius: 12px;
+  background: var(--panel-soft);
+}
+
+.detail-note h3 {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.detail-note p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.6;
+}
+
+/* 하단 고정 버튼 영역: 엄지손가락이 닿기 쉬운 위치에 큰 버튼을 둡니다. */
+.detail-actions {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px calc(12px + var(--safe-bottom));
+  border-top: 1px solid var(--line);
+}
+
+.detail-action {
+  flex: 1;
+  min-height: 50px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: transparent;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.detail-action.primary {
+  flex: 2;
+  border-color: var(--accent);
+  color: #211a12;
+  background: var(--accent);
+  font-weight: 800;
+}
+
+/* ───────── 6. 하단 탭 바 ───────── */
+.tab-bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 30;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  height: calc(var(--tabbar-h) + var(--safe-bottom));
+  padding-bottom: var(--safe-bottom);
+  border-top: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+
+.tab .icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
+.tab[aria-current="page"] {
+  color: var(--accent);
+  font-weight: 800;
+}
+
+/* 아직 만들지 않은 탭은 흐리게 표시합니다. */
+.tab:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* 마우스가 있는 기기(PC)에서만 hover 효과를 줍니다. (터치 기기에선 hover가 '붙어 있는' 버그 방지) */
+@media (hover: hover) {
+  .place-card:hover { background: var(--panel-soft); }
+  .detail-close:hover { color: var(--ink); }
+}
+
+/* 움직임 줄이기 설정을 켠 사용자에게는 애니메이션을 끕니다. */
+@media (prefers-reduced-motion: reduce) {
+  .list-sheet, .detail-sheet, .backdrop, .place-card { transition: none; }
+}

@@ -16,15 +16,18 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/kkangho5467/map_api_service/issues"
   },
   "homepage": "https://github.com/kkangho5467/map_api_service#readme",
   "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.1",
     "vite": "^8.3.0"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.116.0"
+    "@supabase/supabase-js": "^2.116.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
   }
 }
