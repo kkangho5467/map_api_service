@@ -5,16 +5,16 @@
 // DB에 저장된 영어 카테고리 값을 한글 이름으로 바꾸는 표
 export const CATEGORY_NAMES = {
   restaurant: '맛집',
-  festival: '축제',
   cafe: '카페',
+  spot: '명소',
 };
 
 // 상단 필터 칩 목록. 배열로 두면 JSX에서 map()으로 반복해서 버튼을 그릴 수 있습니다.
 export const FILTERS = [
   { value: 'all', label: '전체' },
   { value: 'restaurant', label: '🍽 맛집' },
-  { value: 'festival', label: '🎉 축제' },
   { value: 'cafe', label: '☕ 카페' },
+  { value: 'spot', label: '📸 명소' },
 ];
 
 // 카테고리 한글 이름 (표에 없으면 원래 값을 그대로 보여줍니다)
@@ -45,8 +45,8 @@ export const getPlaceInsight = (place) => ({
 
 // 상세 모달 하단의 방문 노트 문구
 export const getVisitNote = (place) => (
-  place.category === 'festival'
-    ? '행사 당일 주변 교통과 혼잡도 데이터가 연결되면 방문 시간대를 추천할 예정입니다.'
+  place.category === 'spot'
+    ? '관람 시간과 입장료 정보를 연결하면 방문 전에 한눈에 확인할 수 있습니다.'
     : '최신 후기와 운영시간을 연결하면 방문 전 판단에 필요한 정보를 한곳에서 확인할 수 있습니다.'
 );
 

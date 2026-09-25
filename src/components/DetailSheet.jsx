@@ -18,11 +18,12 @@ export default function DetailSheet({ place, open, onClose }) {
     window.setTimeout(() => setShareLabel('공유하기'), 1400);
   };
 
-  // 카카오맵 검색 결과를 새 탭으로 엽니다. noopener: 열린 페이지가 우리 페이지를 조작하지 못하게 막는 보안 옵션
+  // 카카오맵을 새 탭으로 엽니다. noopener: 열린 페이지가 우리 페이지를 조작하지 못하게 막는 보안 옵션
+  // place_url(카카오 장소 상세 페이지)이 있으면 그 가게로 바로, 없으면 이름으로 검색합니다.
   const handleRoute = () => {
     if (!place) return;
-    const query = encodeURIComponent(place.name);
-    window.open(`https://map.kakao.com/?q=${query}`, '_blank', 'noopener,noreferrer');
+    const url = place.place_url ?? `https://map.kakao.com/?q=${encodeURIComponent(place.name)}`;
+    window.open(url, '_blank', 'noopener,noreferrer');
   };
 
   const handleShare = async () => {
