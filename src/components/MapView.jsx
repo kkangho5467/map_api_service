@@ -5,12 +5,22 @@ import { getCategoryName } from '../lib/placeInfo.js';
 // 수원 행궁동 근처를 지도 첫 중심으로 사용합니다.
 const DEFAULT_CENTER = { lat: 37.2819, lng: 127.0147 };
 
-// 하트 모양 아이콘(SVG). fill="currentColor" → CSS의 color 값으로 하트 색이 정해집니다.
-const HEART_SVG = `
-  <svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
-    <path fill="currentColor" stroke="#fff" stroke-width="1.6"
-      d="M12 21s-7.5-4.6-9.6-9.2C.9 8.4 3 4.5 6.8 4.5c2.1 0 3.6 1.2 4.4 2.5.8-1.3 2.3-2.5 4.4-2.5 3.8 0 5.9 3.9 4.4 7.3C19.5 16.4 12 21 12 21z"/>
-  </svg>`;
+// 카테고리별 마커 아이콘(SVG 선 그림). 이모지는 기기마다 모양이 달라서 SVG로 통일합니다.
+// stroke="currentColor" → CSS의 color(흰색)로 선이 그려집니다.
+const svgIcon = (paths) => `
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+    stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${paths}</svg>`;
+
+const MARKER_ICONS = {
+  // 포크 + 나이프
+  restaurant: svgIcon('<path d="M7 3v7a2 2 0 0 0 2 2M7 3v18M4 3v7a2 2 0 0 0 2 2h2"/><path d="M18 21V3c-2 1.5-3 4-3 7h3"/>'),
+  // 커피잔 + 김
+  cafe: svgIcon('<path d="M4 10h12v4a5 5 0 0 1-5 5H9a5 5 0 0 1-5-5z"/><path d="M16 11.5h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3.5v3M12 3.5v3"/>'),
+  // 카메라
+  spot: svgIcon('<path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.2"/>'),
+};
+// 표에 없는 카테고리가 들어와도 깨지지 않도록 기본 아이콘(점)을 둡니다.
+const DEFAULT_ICON = svgIcon('<circle cx="12" cy="12" r="4"/>');
 
 // 지도에 마커를 찍는 컴포넌트입니다.
 // props(부모 App이 넘겨주는 값):
@@ -77,25 +87,31 @@ export default function MapView({ places, selectedPlace, onSelectPlace, onError 
     places.forEach((place) => {
       const position = new kakao.maps.LatLng(place.lat, place.lng);
 
-      // 하트 마커를 DOM 요소로 직접 만듭니다.
-      // <button> + <svg 하트> + <span 이름표> 구조이고, 모양은 index.css의 .heart-marker가 담당합니다.
-      // 이름은 textContent로 넣어야 DB 값에 HTML이 섞여 있어도 글자로만 보입니다(XSS 방지).
+      // 카테고리 마커를 DOM 요소로 직접 만듭니다.
+      // <button class="place-marker is-cafe"> + <span 핀(아이콘)> + <span 이름표> 구조이고,
+      // 색·모양은 index.css의 .place-marker / .is-카테고리 클래스가 담당합니다.
       const element = document.createElement('button');
       element.type = 'button';
-      element.className = 'heart-marker';
+      element.className = `place-marker is-${place.category}`;
       element.setAttribute('aria-label', `${place.name} (${getCategoryName(place.category)})`);
-      element.innerHTML = HEART_SVG; // 우리가 직접 쓴 고정 문자열이라 innerHTML이어도 안전합니다.
-      const label = document.createElement('span');
-      label.className = 'heart-label';
-      label.textContent = place.name;
-      element.append(label);
 
-      // 하트 클릭 → 부모(App)에게 선택 사실을 알립니다. 실제 화면 변화는 App의 state가 결정합니다.
+      const pin = document.createElement('span');
+      pin.className = 'marker-pin';
+      // 우리가 직접 쓴 고정 SVG 문자열이라 innerHTML이어도 안전합니다.
+      pin.innerHTML = MARKER_ICONS[place.category] ?? DEFAULT_ICON;
+
+      // 이름은 textContent로 넣어야 DB 값에 HTML이 섞여 있어도 글자로만 보입니다(XSS 방지).
+      const label = document.createElement('span');
+      label.className = 'marker-label';
+      label.textContent = place.name;
+      element.append(pin, label);
+
+      // 마커 클릭 → 부모(App)에게 선택 사실을 알립니다. 실제 화면 변화는 App의 state가 결정합니다.
       element.addEventListener('click', () => onSelectPlace(place));
 
       // CustomOverlay: 우리가 만든 요소를 지도 좌표 위에 띄워 줍니다.
       //  - yAnchor: 1 → 요소의 '아래 끝'이 좌표를 가리키게 (핀처럼)
-      //  - clickable: true → 하트를 눌러도 지도가 클릭/드래그로 착각하지 않게
+      //  - clickable: true → 마커를 눌러도 지도가 클릭/드래그로 착각하지 않게
       const overlay = new kakao.maps.CustomOverlay({
         map,
         position,
@@ -114,22 +130,22 @@ export default function MapView({ places, selectedPlace, onSelectPlace, onError 
       map.setBounds(bounds, 140, 40, 240, 40);
     }
 
-    // 정리 함수: 다음 실행 전에 이전 하트 마커들을 지도에서 제거합니다.
+    // 정리 함수: 다음 실행 전에 이전 마커들을 지도에서 제거합니다.
     return () => {
       records.forEach(({ overlay }) => overlay.setMap(null));
       records.clear();
     };
   }, [map, places, onSelectPlace]);
 
-  // ④ 선택된 장소가 바뀌면: 해당 하트만 강조(is-selected) → 그 위치로 부드럽게 이동
+  // ④ 선택된 장소가 바뀌면: 해당 마커만 강조(is-selected) → 그 위치로 부드럽게 이동
   useEffect(() => {
     if (!map) return;
 
-    // 모든 하트를 돌면서 선택된 것만 is-selected 클래스를 붙이고 나머지는 뗍니다.
+    // 모든 마커를 돌면서 선택된 것만 is-selected 클래스를 붙이고 나머지는 뗍니다.
     markersRef.current.forEach(({ overlay, element }, id) => {
       const isSelected = id === selectedPlace?.id;
       element.classList.toggle('is-selected', isSelected);
-      // 선택된 하트가 다른 하트에 가려지지 않도록 맨 위로 올립니다.
+      // 선택된 마커가 다른 마커에 가려지지 않도록 맨 위로 올립니다.
       overlay.setZIndex(isSelected ? 10 : 1);
     });
 
