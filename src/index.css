@@ -528,3 +528,100 @@ button {
 @media (prefers-reduced-motion: reduce) {
   .list-sheet, .detail-sheet, .backdrop, .place-card { transition: none; }
 }
+
+/* ───────── 7. 하트 마커 (지도 위 CustomOverlay) ───────── */
+.heart-marker {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #ff6f91; /* 하트 색 (SVG의 currentColor로 전달됨) */
+  cursor: pointer;
+  /* 아래쪽 끝을 기준으로 커지게 해야 하트 끝이 좌표에서 벗어나지 않습니다. */
+  transform-origin: bottom center;
+  transition: transform 180ms ease;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.35));
+}
+
+/* 선택된 하트: 1.35배 확대 + 진한 색 */
+.heart-marker.is-selected {
+  color: #ff3d6e;
+  transform: scale(1.35);
+}
+
+/* 이름표는 평소엔 숨기고, 선택됐을 때만 하트 위에 보여줍니다. */
+.heart-label {
+  position: absolute;
+  bottom: 100%;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+  border-radius: 999px;
+  color: #18211f;
+  background: #fffdf7;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.heart-marker.is-selected .heart-label {
+  opacity: 1;
+}
+
+/* ───────── 8. MY(계정) 시트 ───────── */
+/* 카카오 로그인 버튼: 카카오 디자인 가이드 색상(#FEE500, 글자 85% 검정)을 따릅니다. */
+.kakao-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 22px;
+  border: 0;
+  border-radius: 12px;
+  color: rgba(0, 0, 0, 0.85);
+  background: #fee500;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.profile {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* 프로필 사진(없으면 이모지)을 동그랗게 */
+.profile-avatar {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--panel-soft);
+  font-size: 1.6rem;
+}
+
+.account-button {
+  width: 100%;
+  margin-top: 22px;
+}
+
+.auth-error {
+  margin: 14px 0 0;
+  padding: 12px;
+  border-radius: 10px;
+  color: #ffb4b4;
+  background: rgba(255, 80, 80, 0.12);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}

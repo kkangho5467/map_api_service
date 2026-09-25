@@ -5,6 +5,8 @@ import MapView from './components/MapView.jsx';
 import ListSheet from './components/ListSheet.jsx';
 import DetailSheet from './components/DetailSheet.jsx';
 import TabBar from './components/TabBar.jsx';
+import AccountSheet from './components/AccountSheet.jsx';
+import { useAuth } from './hooks/useAuth.js';
 
 // App = 앱 전체의 '지휘자' 컴포넌트입니다.
 // 모든 상태(state)를 여기서 관리하고, 필요한 값과 함수를 자식 컴포넌트에 props로 나눠 줍니다.
@@ -20,6 +22,15 @@ export default function App() {
   const [selectedPlace, setSelectedPlace] = useState(null); // 선택된 장소
   const [isListExpanded, setIsListExpanded] = useState(false); // 목록 시트 펼침?
   const [isDetailOpen, setIsDetailOpen] = useState(false);  // 상세 모달 열림?
+  const [isAccountOpen, setIsAccountOpen] = useState(false); // MY(계정) 시트 열림?
+
+  // 로그인 관련 상태와 함수는 useAuth 훅이 한꺼번에 관리합니다.
+  const { user, isAuthLoading, authError, signInWithKakao, signOut } = useAuth();
+
+  // 로그인 에러가 생기면(예: 카카오 동의 화면에서 실패하고 돌아옴) MY 시트를 열어 에러 문구를 보여줍니다.
+  useEffect(() => {
+    if (authError) setIsAccountOpen(true);
+  }, [authError]);
 
   // 처음 화면이 뜰 때 한 번, Supabase places 테이블에서 장소를 가져옵니다.
   useEffect(() => {
@@ -60,6 +71,15 @@ export default function App() {
   }, []);
 
   const handleCloseDetail = useCallback(() => setIsDetailOpen(false), []);
+  const handleCloseAccount = useCallback(() => setIsAccountOpen(false), []);
+
+  // 하단 탭 선택: MY → 계정 시트 열기 / 지도 → 열려 있던 시트 모두 닫기
+  // 시트는 한 번에 하나만 보이도록 다른 시트는 닫아 줍니다.
+  const handleSelectTab = (tabId) => {
+    setIsDetailOpen(false);
+    setIsListExpanded(false);
+    setIsAccountOpen(tabId === 'my');
+  };
 
   // 상단 상태 알약에 보여줄 문구 (우선순위: 지도 에러 → 로딩 → 데이터 에러 → 결과)
   let statusText;
@@ -101,7 +121,19 @@ export default function App() {
         open={isDetailOpen}
         onClose={handleCloseDetail}
       />
-      <TabBar />
+      <AccountSheet
+        open={isAccountOpen}
+        onClose={handleCloseAccount}
+        user={user}
+        isAuthLoading={isAuthLoading}
+        authError={authError}
+        onLogin={signInWithKakao}
+        onLogout={signOut}
+      />
+      <TabBar
+        activeTab={isAccountOpen ? 'my' : 'map'}
+        onSelectTab={handleSelectTab}
+      />
     </div>
   );
 }
