@@ -64,10 +64,11 @@ export default function CoupleCard({
     }
 
     runAction(async () => {
-      const result = await onSendRequest(code);
+      // 'sent'면 카드에 '수락을 기다리는 중'이 표시되고,
+      // 'connected'면 상대도 나에게 요청해 둔 상태라 바로 연결 화면으로 바뀝니다.
+      // (별도 안내 문구를 띄우지 않습니다. 상대가 거절하면 남은 문구가 헷갈리게 보이기 때문)
+      await onSendRequest(code);
       setCodeInput('');
-      // 'connected'면 상대도 나에게 요청해 둔 상태라 바로 연결됨 → 카드가 연결 화면으로 바뀝니다.
-      return result === 'sent' ? '요청을 보냈어요! 상대가 수락하면 연결돼요.' : null;
     });
   };
 

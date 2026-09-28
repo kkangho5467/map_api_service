@@ -159,12 +159,17 @@ export const useProfile = (user) => {
         { event: 'INSERT', schema: 'public', table: 'couple_requests', filter: `receiver_id=eq.${userId}` },
         () => refresh(),
       )
-      // ② 요청이 삭제됨(거절·취소·수락 후 정리) → 삭제 알림은 모든 구독자에게 id만 오므로 '내 요청'일 때만 반영
+      // ② 요청이 삭제됨(거절·취소·수락 후 정리)
+      //    삭제 알림은 RLS가 적용되지 않아 모든 구독자에게 오고, 기본 설정에서는 지워진 행의 값(old)이 비어서 옵니다.
+      //    그래서 '대기 중인 요청이 있을 때만' 다시 읽고, id가 들어 있으면 내 요청인지 한 번 더 확인합니다.
       .on(
         'postgres_changes',
         { event: 'DELETE', schema: 'public', table: 'couple_requests' },
         (payload) => {
-          if (myRequestIdsRef.current.has(payload.old?.id)) refresh();
+          const myIds = myRequestIdsRef.current;
+          if (myIds.size === 0) return;          // 대기 중인 요청이 없으면 나와 무관
+          const deletedId = payload.old?.id;
+          if (deletedId === undefined || myIds.has(deletedId)) refresh();
         },
       )
       // ③ 내가 커플 멤버로 추가됨(상대가 내 요청을 수락) → 연결 화면으로 전환
