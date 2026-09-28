@@ -1,7 +1,7 @@
-// 하단 탭 바. '지도'와 'MY'가 동작하고, 찜/인증은 이후 단계에서 연결합니다.
+// 하단 탭 바. '지도', '찜'(찜한 곳 필터), 'MY'가 동작하고, 인증은 이후 단계에서 연결합니다.
 const TABS = [
   { id: 'map', icon: '🗺', label: '지도', ready: true },
-  { id: 'likes', icon: '♡', label: '찜', ready: false },
+  { id: 'likes', icon: '♡', label: '찜', ready: true },
   { id: 'checkin', icon: '✓', label: '인증', ready: false },
   { id: 'my', icon: '☺', label: 'MY', ready: true },
 ];

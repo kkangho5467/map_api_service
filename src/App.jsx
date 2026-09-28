@@ -8,6 +8,7 @@ import TabBar from './components/TabBar.jsx';
 import AccountSheet from './components/AccountSheet.jsx';
 import { useAuth } from './hooks/useAuth.js';
 import { useProfile } from './hooks/useProfile.js';
+import { useLikes } from './hooks/useLikes.js';
 
 // App = 앱 전체의 '지휘자' 컴포넌트입니다.
 // 모든 상태(state)를 여기서 관리하고, 필요한 값과 함수를 자식 컴포넌트에 props로 나눠 줍니다.
@@ -32,6 +33,16 @@ export default function App() {
   // 마이페이지(AccountSheet)뿐 아니라 탭 바도 "받은 요청이 있는지"를 알아야 빨간 점을 띄울 수 있기 때문입니다.
   const profileState = useProfile(user);
   const hasNewRequest = profileState.requests.incoming.length > 0;
+
+  // 내 찜 목록(찜한 장소 id 모음)과 찜 추가/취소 함수
+  const { likedIds, toggleLike } = useLikes(user);
+
+  // 로그아웃하면 '찜한 곳' 필터를 풀어 줍니다. (찜 목록이 비어 빈 지도만 보이는 것을 방지)
+  useEffect(() => {
+    if (!user && !isAuthLoading) {
+      setActiveCategory((prev) => (prev === 'likes' ? 'all' : prev));
+    }
+  }, [user, isAuthLoading]);
 
   // 로그인 에러가 생기면(예: 카카오 동의 화면에서 실패하고 돌아옴) MY 시트를 열어 에러 문구를 보여줍니다.
   useEffect(() => {
@@ -61,12 +72,12 @@ export default function App() {
 
   // useMemo: places나 activeCategory가 바뀔 때만 필터링을 다시 계산합니다.
   // 매번 새 배열을 만들면 MapView가 "장소가 바뀌었다"고 착각해 마커를 계속 다시 찍기 때문입니다.
-  const visiblePlaces = useMemo(
-    () => (activeCategory === 'all'
-      ? places
-      : places.filter((place) => place.category === activeCategory)),
-    [places, activeCategory],
-  );
+  // 'likes'(찜한 곳)는 카테고리가 아니라 내 찜 목록에 있는지로 거릅니다.
+  const visiblePlaces = useMemo(() => {
+    if (activeCategory === 'all') return places;
+    if (activeCategory === 'likes') return places.filter((place) => likedIds.has(place.id));
+    return places.filter((place) => place.category === activeCategory);
+  }, [places, activeCategory, likedIds]);
 
   // useCallback: 함수를 '기억'해 두고 재사용합니다. (위 useMemo와 같은 이유로 MapView 재실행 방지)
   // 장소를 고르면 → 선택 저장 + 목록 시트 접기 + 상세 모달 열기
@@ -79,13 +90,49 @@ export default function App() {
   const handleCloseDetail = useCallback(() => setIsDetailOpen(false), []);
   const handleCloseAccount = useCallback(() => setIsAccountOpen(false), []);
 
-  // 하단 탭 선택: MY → 계정 시트 열기 / 지도 → 열려 있던 시트 모두 닫기
+  // 로그인이 필요한 동작인데 로그아웃 상태면 → 다른 시트를 닫고 MY(로그인) 시트를 엽니다.
+  // 로그인 상태면 true를 돌려줘서 "계속 진행해도 된다"고 알려 줍니다.
+  const requireLogin = () => {
+    if (user) return true;
+    setIsDetailOpen(false);
+    setIsListExpanded(false);
+    setIsAccountOpen(true);
+    return false;
+  };
+
+  // 상단 필터 선택. '찜한 곳'은 로그인해야 볼 수 있습니다.
+  const handleChangeCategory = (category) => {
+    if (category === 'likes' && !requireLogin()) return;
+    setActiveCategory(category);
+  };
+
+  // 상세 모달의 ♡ 버튼. 로그아웃 상태면 로그인 시트를 엽니다.
+  const handleToggleLike = async (place) => {
+    if (!requireLogin()) return;
+    await toggleLike(place.id); // 실패하면 에러가 DetailSheet까지 전달되어 안내 문구가 뜹니다.
+  };
+
+  // 하단 탭 선택
+  //  - MY → 계정 시트 열기
+  //  - 찜 → '찜한 곳' 필터 켜기 (로그아웃 상태면 로그인 시트)
+  //  - 지도 → 시트 모두 닫고, 찜 필터였다면 '전체'로 되돌리기
   // 시트는 한 번에 하나만 보이도록 다른 시트는 닫아 줍니다.
   const handleSelectTab = (tabId) => {
+    if (tabId === 'likes') {
+      if (!requireLogin()) return;
+      setActiveCategory('likes');
+    } else if (tabId === 'map' && activeCategory === 'likes') {
+      setActiveCategory('all');
+    }
     setIsDetailOpen(false);
     setIsListExpanded(false);
     setIsAccountOpen(tabId === 'my');
   };
+
+  // 지금 선택된 하단 탭: MY 시트가 열려 있으면 MY, 찜 필터면 찜, 그 외는 지도
+  let activeTab = 'map';
+  if (isAccountOpen) activeTab = 'my';
+  else if (activeCategory === 'likes') activeTab = 'likes';
 
   // 상단 상태 알약에 보여줄 문구 (우선순위: 지도 에러 → 로딩 → 데이터 에러 → 결과)
   let statusText;
@@ -99,6 +146,7 @@ export default function App() {
   let countText;
   if (isLoading) countText = '불러오는 중';
   else if (loadError) countText = '장소를 불러오지 못했어요';
+  else if (activeCategory === 'likes' && visiblePlaces.length === 0) countText = '아직 찜한 곳이 없어요';
   else countText = `${visiblePlaces.length}곳`;
 
   return (
@@ -111,7 +159,7 @@ export default function App() {
       />
       <TopBar
         activeCategory={activeCategory}
-        onChangeCategory={setActiveCategory}
+        onChangeCategory={handleChangeCategory}
         statusText={statusText}
       />
       <ListSheet
@@ -126,6 +174,8 @@ export default function App() {
         place={selectedPlace}
         open={isDetailOpen}
         onClose={handleCloseDetail}
+        liked={selectedPlace ? likedIds.has(selectedPlace.id) : false}
+        onToggleLike={handleToggleLike}
       />
       <AccountSheet
         open={isAccountOpen}
@@ -138,7 +188,7 @@ export default function App() {
         profileState={profileState}
       />
       <TabBar
-        activeTab={isAccountOpen ? 'my' : 'map'}
+        activeTab={activeTab}
         onSelectTab={handleSelectTab}
         hasMyAlert={hasNewRequest}
       />

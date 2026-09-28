@@ -4,6 +4,14 @@
 supabasepw.md
 PROGRESS_LOG.md
 
+# 안드로이드 앱 서명 키·빌드 결과물 (PWABuilder가 만든 파일. 키는 잃어버리거나 공개되면 안 됨)
+*.keystore
+*.jks
+signing-key-info.txt
+*.apk
+*.aab
+android-app/
+
 # Python 및 캐시 관련 파일
 __pycache__/
 *.py[cod]

@@ -11,3 +11,15 @@ createRoot(document.getElementById('root')).render(
     <App />
   </StrictMode>,
 );
+
+// 서비스 워커 등록 (앱 설치용). 배포 버전(PROD)에서만 등록합니다.
+// 개발 중(npm run dev)에 등록하면 코드 수정이 바로 안 보이는 등 헷갈릴 수 있기 때문입니다.
+if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+  // 화면이 다 뜬 뒤(load) 등록해서 첫 화면 로딩을 늦추지 않습니다.
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch((error) => {
+      // 등록에 실패해도 웹사이트 사용에는 문제가 없으므로 콘솔에만 남깁니다.
+      console.error('서비스 워커 등록 실패:', error);
+    });
+  });
+}

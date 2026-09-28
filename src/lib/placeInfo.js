@@ -15,6 +15,8 @@ export const FILTERS = [
   { value: 'restaurant', label: '🍽 맛집' },
   { value: 'cafe', label: '☕ 카페' },
   { value: 'spot', label: '📸 명소' },
+  // 카테고리가 아니라 "내가 찜한 장소만" 보여주는 특별 필터입니다. (App에서 따로 처리)
+  { value: 'likes', label: '♥ 찜한 곳' },
 ];
 
 // 카테고리 한글 이름 (표에 없으면 원래 값을 그대로 보여줍니다)

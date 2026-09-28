@@ -466,6 +466,87 @@ button {
   cursor: pointer;
 }
 
+/* 찜(♡) 버튼: 글자 없이 하트만 있으므로 정사각형에 가깝게 좁힙니다. */
+.detail-action.like {
+  position: relative; /* 아래 ::after 고리를 버튼 기준으로 배치하기 위해 */
+  flex: 0 0 56px;
+  font-size: 1.4rem;
+  color: var(--muted);
+}
+
+/* 찜한 상태(aria-pressed="true")면 하트를 분홍색으로 채웁니다. */
+.detail-action.like[aria-pressed="true"] {
+  border-color: #ff5a7a;
+  color: #ff5a7a;
+}
+
+/* 찜할 때 버튼 효과 3가지. 모두 0.6초로 맞춰 하나가 먼저 끝나 효과가 끊기지 않게 합니다.
+   ① 버튼이 '톡' 커졌다 돌아오기 */
+.detail-action.like.pop {
+  animation: like-pop 0.6s ease-out;
+}
+
+@keyframes like-pop {
+  0%   { transform: scale(1); }
+  30%  { transform: scale(1.25); }   /* 크게 부풀었다가 */
+  55%  { transform: scale(0.95); }   /* 살짝 줄어든 뒤 */
+  100% { transform: scale(1); }      /* 원래 크기로 */
+}
+
+/* ② 버튼 둘레로 분홍 고리가 퍼지며 사라지기 (::after = 버튼 안에 CSS로만 만든 가짜 요소) */
+.detail-action.like.pop::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border: 2px solid #ff5a7a;
+  border-radius: inherit;
+  pointer-events: none;
+  animation: like-ring 0.6s ease-out forwards;
+}
+
+@keyframes like-ring {
+  0%   { transform: scale(0.8); opacity: 1; }
+  100% { transform: scale(1.4); opacity: 0; }
+}
+
+/* ③ 버튼 가운데에서 하트가 커지며 위로 떠올라 사라지기 (인스타 좋아요 느낌)
+   버튼이 position: relative라서, absolute인 이 하트는 버튼을 기준으로 자리를 잡습니다. */
+.like-float {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #ff5a7a;
+  font-size: 1.6rem;
+  line-height: 1;
+  pointer-events: none; /* 떠 있는 동안에도 버튼 클릭을 막지 않게 */
+  animation: like-float 0.6s ease-out forwards;
+}
+
+/* translate(-50%, -50%) = 하트의 중심을 버튼 중심에 맞추는 기본 위치 */
+@keyframes like-float {
+  0%   { transform: translate(-50%, -50%) scale(0.6);  opacity: 1; }
+  35%  { transform: translate(-50%, -110%) scale(1.5); opacity: 1; } /* 커지며 올라가고 */
+  100% { transform: translate(-50%, -220%) scale(1.2); opacity: 0; } /* 더 올라가며 사라짐 */
+}
+
+/* '동작 줄이기'(Windows: 애니메이션 효과 끔)를 켠 사용자에게는
+   크기가 변하거나 움직이는 효과 대신, 흐렸다가 선명해지는 조용한 효과만 보여줍니다.
+   (animation을 아예 끄면 onAnimationEnd가 오지 않아 효과 상태가 남는 문제도 막아 줍니다) */
+@media (prefers-reduced-motion: reduce) {
+  .detail-action.like.pop {
+    animation: like-fade 0.6s ease-out;
+  }
+  .detail-action.like.pop::after,
+  .like-float {
+    display: none;
+  }
+}
+
+@keyframes like-fade {
+  0%   { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
 .detail-action.primary {
   flex: 2;
   border-color: var(--accent);

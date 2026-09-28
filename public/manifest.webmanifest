@@ -1,0 +1,21 @@
+{
+  "name": "Pop-Pin 데이트 지도",
+  "short_name": "팝핀",
+  "description": "커플 데이트 코스를 지도에서 함께 고르는 Pop-Pin",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ko",
+  "background_color": "#111817",
+  "theme_color": "#111817",
+  "icons": [
+    {
+      "src": "/app-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
