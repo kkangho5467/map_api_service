@@ -870,3 +870,62 @@ button:disabled {
   opacity: 0.5;
   cursor: default;
 }
+
+/* ─── 커플 요청 (받은 요청 / 보낸 요청) ─── */
+.request-list {
+  margin-bottom: 18px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--line);
+}
+
+/* 요청 1건: [사진] [문구] [버튼들] 한 줄 */
+.request-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.request-text {
+  flex: 1;
+  min-width: 0;          /* 긴 닉네임이 버튼을 밀어내지 않도록 줄바꿈 허용 */
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.4;
+}
+
+.request-actions {
+  display: flex;
+  gap: 6px;
+}
+
+/* 요청 영역의 버튼은 한 줄에 여러 개라 조금 작게 */
+.request-item .chip-button {
+  min-height: 40px;
+  padding: 0 12px;
+}
+
+/* MY 탭 아이콘 오른쪽 위의 빨간 점 */
+.tab .icon {
+  position: relative;
+}
+
+.tab-dot {
+  position: absolute;
+  top: -2px;
+  right: -6px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #ff4d4f;
+}
+
+/* 화면에는 안 보이지만 스크린리더는 읽는 글자 */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}

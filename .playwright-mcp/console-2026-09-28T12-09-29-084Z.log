@@ -1,0 +1,5 @@
+[     703ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=9504f848:15804
+[     985ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/favicon.ico:0
+[   32066ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:5173/node_modules/.vite/deps/react-dom_client.js?v=9504f848:15804
+[   85686ms] [ERROR] Failed to load resource: the server responded with a status of 400 () @ https://flmaxtnszpvivuahwxqs.supabase.co/rest/v1/rpc/send_couple_request:0
+[   85687ms] [ERROR] send_couple_request 실패: {code: P0001, details: null, hint: null, message: 내 초대 코드는 입력할 수 없어요.} @ http://localhost:5173/@vite/client:298

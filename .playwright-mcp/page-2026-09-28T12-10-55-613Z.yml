@@ -1,0 +1,393 @@
+- generic [ref=f3e3]:
+  - generic "장소 지도" [ref=f3e4]:
+    - generic [ref=f3e5]:
+      - generic:
+        - generic:
+          - button "츄플러스 (카페)" [ref=f3e9] [cursor=pointer]:
+            - generic: 츄플러스
+          - button "매트그린 (카페)" [ref=f3e16] [cursor=pointer]:
+            - generic: 매트그린
+          - button "르븨밀크 수원행궁점 (카페)" [ref=f3e23] [cursor=pointer]:
+            - generic: 르븨밀크 수원행궁점
+          - button "모찌고 (카페)" [ref=f3e30] [cursor=pointer]:
+            - generic: 모찌고
+          - button "나커피로스터스 (카페)" [ref=f3e37] [cursor=pointer]:
+            - generic: 나커피로스터스
+          - button "버터앤츄 행궁본점 (카페)" [ref=f3e44] [cursor=pointer]:
+            - generic: 버터앤츄 행궁본점
+          - button "도슨트커피하우스 (카페)" [ref=f3e51] [cursor=pointer]:
+            - generic: 도슨트커피하우스
+          - button "카페 빅팬트리 (카페)" [ref=f3e58] [cursor=pointer]:
+            - generic: 카페 빅팬트리
+          - button "텀어스 (카페)" [ref=f3e65] [cursor=pointer]:
+            - generic: 텀어스
+          - button "GV (카페)" [ref=f3e72] [cursor=pointer]:
+            - generic: GV
+          - button "카페메이븐 (카페)" [ref=f3e79] [cursor=pointer]:
+            - generic: 카페메이븐
+          - button "메모리아마넷 (카페)" [ref=f3e86] [cursor=pointer]:
+            - generic: 메모리아마넷
+          - button "칠이공구 (카페)" [ref=f3e93] [cursor=pointer]:
+            - generic: 칠이공구
+          - button "커피가이 (카페)" [ref=f3e100] [cursor=pointer]:
+            - generic: 커피가이
+          - button "스타벅스 수원화성행궁점 (카페)" [ref=f3e107] [cursor=pointer]:
+            - generic: 스타벅스 수원화성행궁점
+          - button "카페도화 연무대점 (카페)" [ref=f3e114] [cursor=pointer]:
+            - generic: 카페도화 연무대점
+          - button "얼티튜드 (맛집)" [ref=f3e121] [cursor=pointer]:
+            - generic: 얼티튜드
+          - button "골목집 (맛집)" [ref=f3e127] [cursor=pointer]:
+            - generic: 골목집
+          - button "보영만두 북문본점 (맛집)" [ref=f3e133] [cursor=pointer]:
+            - generic: 보영만두 북문본점
+          - button "송연 (맛집)" [ref=f3e139] [cursor=pointer]:
+            - generic: 송연
+          - button "항아리칼국수 (맛집)" [ref=f3e145] [cursor=pointer]:
+            - generic: 항아리칼국수
+          - button "칠링더데이 (맛집)" [ref=f3e151] [cursor=pointer]:
+            - generic: 칠링더데이
+          - button "연하포차나 (맛집)" [ref=f3e157] [cursor=pointer]:
+            - generic: 연하포차나
+          - button "노체부어 스페니쉬와인바 (맛집)" [ref=f3e163] [cursor=pointer]:
+            - generic: 노체부어 스페니쉬와인바
+          - button "용성통닭 본점 (맛집)" [ref=f3e169] [cursor=pointer]:
+            - generic: 용성통닭 본점
+          - button "라비아화덕피자 (맛집)" [ref=f3e175] [cursor=pointer]:
+            - generic: 라비아화덕피자
+          - button "남문통닭 본점 (맛집)" [ref=f3e181] [cursor=pointer]:
+            - generic: 남문통닭 본점
+          - button "행궁칼국수 (맛집)" [ref=f3e187] [cursor=pointer]:
+            - generic: 행궁칼국수
+          - button "콜마이키친 (맛집)" [ref=f3e193] [cursor=pointer]:
+            - generic: 콜마이키친
+          - button "한봉석할머니순두부 (맛집)" [ref=f3e199] [cursor=pointer]:
+            - generic: 한봉석할머니순두부
+          - button "운멜로 1호점 (맛집)" [ref=f3e205] [cursor=pointer]:
+            - generic: 운멜로 1호점
+          - button "딥 (맛집)" [ref=f3e211] [cursor=pointer]:
+            - generic: 딥
+          - button "화성행궁 (명소)" [ref=f3e217] [cursor=pointer]:
+            - generic: 화성행궁
+          - button "방화수류정 (명소)" [ref=f3e223] [cursor=pointer]:
+            - generic: 방화수류정
+          - button "수원화성 화홍문 (명소)" [ref=f3e229] [cursor=pointer]:
+            - generic: 수원화성 화홍문
+          - button "수원화성 장안문 (명소)" [ref=f3e235] [cursor=pointer]:
+            - generic: 수원화성 장안문
+          - button "수원화성 화서문 (명소)" [ref=f3e241] [cursor=pointer]:
+            - generic: 수원화성 화서문
+          - button "수원화성 팔달문 (명소)" [ref=f3e247] [cursor=pointer]:
+            - generic: 수원화성 팔달문
+          - button "수원화성박물관 (명소)" [ref=f3e253] [cursor=pointer]:
+            - generic: 수원화성박물관
+          - button "수원시립미술관 (명소)" [ref=f3e259] [cursor=pointer]:
+            - generic: 수원시립미술관
+          - button "행궁동벽화마을 (명소)" [ref=f3e265] [cursor=pointer]:
+            - generic: 행궁동벽화마을
+    - generic [ref=f3e270]:
+      - generic [ref=f3e271]: 500m
+      - link [ref=f3e275] [cursor=pointer]:
+        - /url: http://map.kakao.com/
+        - img "Kakao 맵으로 이동(새창열림)" [ref=f3e276]
+  - banner:
+    - generic [ref=f3e277]:
+      - link "POP·PIN" [ref=f3e278] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f3e279]: 📍 수원 행궁동
+    - tablist "장소 카테고리" [ref=f3e280]:
+      - tab "전체" [selected] [ref=f3e281] [cursor=pointer]
+      - tab "🍽 맛집" [ref=f3e282] [cursor=pointer]
+      - tab "☕ 카페" [ref=f3e283] [cursor=pointer]
+      - tab "📸 명소" [ref=f3e284] [cursor=pointer]
+    - generic [ref=f3e285]: 41 PLACES READY
+  - region "장소 목록" [ref=f3e286]:
+    - button "오늘의 데이트 큐레이션 41곳" [ref=f3e287] [cursor=pointer]:
+      - generic [ref=f3e288]:
+        - strong [ref=f3e289]: 오늘의 데이트 큐레이션
+        - generic [ref=f3e290]: 41곳
+    - generic [ref=f3e291]:
+      - button "츄플러스 경기 수원시 팔달구 화서문로45번길 26 방문 정보 확인 · 카페 ACCESS +" [ref=f3e292] [cursor=pointer]:
+        - generic [ref=f3e293]:
+          - strong [ref=f3e294]: 츄플러스
+          - generic [ref=f3e295]: 경기 수원시 팔달구 화서문로45번길 26
+          - generic [ref=f3e296]: 방문 정보 확인 · 카페
+        - generic [ref=f3e297]: ACCESS +
+      - button "매트그린 경기 수원시 팔달구 화서문로45번길 8 방문 정보 확인 · 카페 ACCESS +" [ref=f3e298] [cursor=pointer]:
+        - generic [ref=f3e299]:
+          - strong [ref=f3e300]: 매트그린
+          - generic [ref=f3e301]: 경기 수원시 팔달구 화서문로45번길 8
+          - generic [ref=f3e302]: 방문 정보 확인 · 카페
+        - generic [ref=f3e303]: ACCESS +
+      - button "르븨밀크 수원행궁점 경기 수원시 팔달구 신풍로 55 방문 정보 확인 · 카페 ACCESS +" [ref=f3e304] [cursor=pointer]:
+        - generic [ref=f3e305]:
+          - strong [ref=f3e306]: 르븨밀크 수원행궁점
+          - generic [ref=f3e307]: 경기 수원시 팔달구 신풍로 55
+          - generic [ref=f3e308]: 방문 정보 확인 · 카페
+        - generic [ref=f3e309]: ACCESS +
+      - button "모찌고 경기 수원시 팔달구 정조로 873 방문 정보 확인 · 카페 ACCESS +" [ref=f3e310] [cursor=pointer]:
+        - generic [ref=f3e311]:
+          - strong [ref=f3e312]: 모찌고
+          - generic [ref=f3e313]: 경기 수원시 팔달구 정조로 873
+          - generic [ref=f3e314]: 방문 정보 확인 · 카페
+        - generic [ref=f3e315]: ACCESS +
+      - button "나커피로스터스 경기 수원시 팔달구 신풍로 48-15 방문 정보 확인 · 카페 ACCESS +" [ref=f3e316] [cursor=pointer]:
+        - generic [ref=f3e317]:
+          - strong [ref=f3e318]: 나커피로스터스
+          - generic [ref=f3e319]: 경기 수원시 팔달구 신풍로 48-15
+          - generic [ref=f3e320]: 방문 정보 확인 · 카페
+        - generic [ref=f3e321]: ACCESS +
+      - button "버터앤츄 행궁본점 경기 수원시 팔달구 화서문로45번길 9 방문 정보 확인 · 카페 ACCESS +" [ref=f3e322] [cursor=pointer]:
+        - generic [ref=f3e323]:
+          - strong [ref=f3e324]: 버터앤츄 행궁본점
+          - generic [ref=f3e325]: 경기 수원시 팔달구 화서문로45번길 9
+          - generic [ref=f3e326]: 방문 정보 확인 · 카페
+        - generic [ref=f3e327]: ACCESS +
+      - button "도슨트커피하우스 경기 수원시 팔달구 신풍로 71 방문 정보 확인 · 카페 ACCESS +" [ref=f3e328] [cursor=pointer]:
+        - generic [ref=f3e329]:
+          - strong [ref=f3e330]: 도슨트커피하우스
+          - generic [ref=f3e331]: 경기 수원시 팔달구 신풍로 71
+          - generic [ref=f3e332]: 방문 정보 확인 · 카페
+        - generic [ref=f3e333]: ACCESS +
+      - button "카페 빅팬트리 경기 수원시 팔달구 화서문로51번길 19 방문 정보 확인 · 카페 ACCESS +" [ref=f3e334] [cursor=pointer]:
+        - generic [ref=f3e335]:
+          - strong [ref=f3e336]: 카페 빅팬트리
+          - generic [ref=f3e337]: 경기 수원시 팔달구 화서문로51번길 19
+          - generic [ref=f3e338]: 방문 정보 확인 · 카페
+        - generic [ref=f3e339]: ACCESS +
+      - button "텀어스 경기 수원시 팔달구 창룡대로 20 방문 정보 확인 · 카페 ACCESS +" [ref=f3e340] [cursor=pointer]:
+        - generic [ref=f3e341]:
+          - strong [ref=f3e342]: 텀어스
+          - generic [ref=f3e343]: 경기 수원시 팔달구 창룡대로 20
+          - generic [ref=f3e344]: 방문 정보 확인 · 카페
+        - generic [ref=f3e345]: ACCESS +
+      - button "GV 경기 수원시 팔달구 정조로 834 방문 정보 확인 · 카페 ACCESS +" [ref=f3e346] [cursor=pointer]:
+        - generic [ref=f3e347]:
+          - strong [ref=f3e348]: GV
+          - generic [ref=f3e349]: 경기 수원시 팔달구 정조로 834
+          - generic [ref=f3e350]: 방문 정보 확인 · 카페
+        - generic [ref=f3e351]: ACCESS +
+      - button "카페메이븐 경기 수원시 팔달구 창룡대로74번길 15 방문 정보 확인 · 카페 ACCESS +" [ref=f3e352] [cursor=pointer]:
+        - generic [ref=f3e353]:
+          - strong [ref=f3e354]: 카페메이븐
+          - generic [ref=f3e355]: 경기 수원시 팔달구 창룡대로74번길 15
+          - generic [ref=f3e356]: 방문 정보 확인 · 카페
+        - generic [ref=f3e357]: ACCESS +
+      - button "메모리아마넷 경기 수원시 팔달구 행궁로 56-17 방문 정보 확인 · 카페 ACCESS +" [ref=f3e358] [cursor=pointer]:
+        - generic [ref=f3e359]:
+          - strong [ref=f3e360]: 메모리아마넷
+          - generic [ref=f3e361]: 경기 수원시 팔달구 행궁로 56-17
+          - generic [ref=f3e362]: 방문 정보 확인 · 카페
+        - generic [ref=f3e363]: ACCESS +
+      - button "칠이공구 경기 수원시 팔달구 신풍로23번길 54 방문 정보 확인 · 카페 ACCESS +" [ref=f3e364] [cursor=pointer]:
+        - generic [ref=f3e365]:
+          - strong [ref=f3e366]: 칠이공구
+          - generic [ref=f3e367]: 경기 수원시 팔달구 신풍로23번길 54
+          - generic [ref=f3e368]: 방문 정보 확인 · 카페
+        - generic [ref=f3e369]: ACCESS +
+      - button "커피가이 경기 수원시 팔달구 창룡대로103번길 132 방문 정보 확인 · 카페 ACCESS +" [ref=f3e370] [cursor=pointer]:
+        - generic [ref=f3e371]:
+          - strong [ref=f3e372]: 커피가이
+          - generic [ref=f3e373]: 경기 수원시 팔달구 창룡대로103번길 132
+          - generic [ref=f3e374]: 방문 정보 확인 · 카페
+        - generic [ref=f3e375]: ACCESS +
+      - button "스타벅스 수원화성행궁점 경기 수원시 팔달구 정조로841번길 10 방문 정보 확인 · 카페 ACCESS +" [ref=f3e376] [cursor=pointer]:
+        - generic [ref=f3e377]:
+          - strong [ref=f3e378]: 스타벅스 수원화성행궁점
+          - generic [ref=f3e379]: 경기 수원시 팔달구 정조로841번길 10
+          - generic [ref=f3e380]: 방문 정보 확인 · 카페
+        - generic [ref=f3e381]: ACCESS +
+      - button "카페도화 연무대점 경기 수원시 팔달구 창룡대로103번길 8 방문 정보 확인 · 카페 ACCESS +" [ref=f3e382] [cursor=pointer]:
+        - generic [ref=f3e383]:
+          - strong [ref=f3e384]: 카페도화 연무대점
+          - generic [ref=f3e385]: 경기 수원시 팔달구 창룡대로103번길 8
+          - generic [ref=f3e386]: 방문 정보 확인 · 카페
+        - generic [ref=f3e387]: ACCESS +
+      - button "얼티튜드 경기 수원시 팔달구 화서문로45번길 9 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e388] [cursor=pointer]:
+        - generic [ref=f3e389]:
+          - strong [ref=f3e390]: 얼티튜드
+          - generic [ref=f3e391]: 경기 수원시 팔달구 화서문로45번길 9
+          - generic [ref=f3e392]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e393]: ACCESS +
+      - button "골목집 경기 수원시 팔달구 화서문로 53-1 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e394] [cursor=pointer]:
+        - generic [ref=f3e395]:
+          - strong [ref=f3e396]: 골목집
+          - generic [ref=f3e397]: 경기 수원시 팔달구 화서문로 53-1
+          - generic [ref=f3e398]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e399]: ACCESS +
+      - button "보영만두 북문본점 경기 수원시 장안구 팔달로 271 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e400] [cursor=pointer]:
+        - generic [ref=f3e401]:
+          - strong [ref=f3e402]: 보영만두 북문본점
+          - generic [ref=f3e403]: 경기 수원시 장안구 팔달로 271
+          - generic [ref=f3e404]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e405]: ACCESS +
+      - button "송연 경기 수원시 팔달구 신풍로23번길 28 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e406] [cursor=pointer]:
+        - generic [ref=f3e407]:
+          - strong [ref=f3e408]: 송연
+          - generic [ref=f3e409]: 경기 수원시 팔달구 신풍로23번길 28
+          - generic [ref=f3e410]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e411]: ACCESS +
+      - button "항아리칼국수 경기 수원시 팔달구 정조로905번길 17 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e412] [cursor=pointer]:
+        - generic [ref=f3e413]:
+          - strong [ref=f3e414]: 항아리칼국수
+          - generic [ref=f3e415]: 경기 수원시 팔달구 정조로905번길 17
+          - generic [ref=f3e416]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e417]: ACCESS +
+      - button "칠링더데이 경기 수원시 팔달구 화서문로41번길 15-14 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e418] [cursor=pointer]:
+        - generic [ref=f3e419]:
+          - strong [ref=f3e420]: 칠링더데이
+          - generic [ref=f3e421]: 경기 수원시 팔달구 화서문로41번길 15-14
+          - generic [ref=f3e422]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e423]: ACCESS +
+      - button "연하포차나 경기 수원시 팔달구 화서문로32번길 25-6 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e424] [cursor=pointer]:
+        - generic [ref=f3e425]:
+          - strong [ref=f3e426]: 연하포차나
+          - generic [ref=f3e427]: 경기 수원시 팔달구 화서문로32번길 25-6
+          - generic [ref=f3e428]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e429]: ACCESS +
+      - button "노체부어 스페니쉬와인바 경기 수원시 팔달구 정조로905번길 41 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e430] [cursor=pointer]:
+        - generic [ref=f3e431]:
+          - strong [ref=f3e432]: 노체부어 스페니쉬와인바
+          - generic [ref=f3e433]: 경기 수원시 팔달구 정조로905번길 41
+          - generic [ref=f3e434]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e435]: ACCESS +
+      - button "용성통닭 본점 경기 수원시 팔달구 정조로800번길 15 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e436] [cursor=pointer]:
+        - generic [ref=f3e437]:
+          - strong [ref=f3e438]: 용성통닭 본점
+          - generic [ref=f3e439]: 경기 수원시 팔달구 정조로800번길 15
+          - generic [ref=f3e440]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e441]: ACCESS +
+      - button "라비아화덕피자 경기 수원시 팔달구 행궁로 49-2 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e442] [cursor=pointer]:
+        - generic [ref=f3e443]:
+          - strong [ref=f3e444]: 라비아화덕피자
+          - generic [ref=f3e445]: 경기 수원시 팔달구 행궁로 49-2
+          - generic [ref=f3e446]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e447]: ACCESS +
+      - button "남문통닭 본점 경기 수원시 팔달구 정조로800번길 16 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e448] [cursor=pointer]:
+        - generic [ref=f3e449]:
+          - strong [ref=f3e450]: 남문통닭 본점
+          - generic [ref=f3e451]: 경기 수원시 팔달구 정조로800번길 16
+          - generic [ref=f3e452]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e453]: ACCESS +
+      - button "행궁칼국수 경기 수원시 팔달구 정조로 848 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e454] [cursor=pointer]:
+        - generic [ref=f3e455]:
+          - strong [ref=f3e456]: 행궁칼국수
+          - generic [ref=f3e457]: 경기 수원시 팔달구 정조로 848
+          - generic [ref=f3e458]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e459]: ACCESS +
+      - button "콜마이키친 경기 수원시 팔달구 화서문로 27 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e460] [cursor=pointer]:
+        - generic [ref=f3e461]:
+          - strong [ref=f3e462]: 콜마이키친
+          - generic [ref=f3e463]: 경기 수원시 팔달구 화서문로 27
+          - generic [ref=f3e464]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e465]: ACCESS +
+      - button "한봉석할머니순두부 경기 수원시 팔달구 행궁로 71 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e466] [cursor=pointer]:
+        - generic [ref=f3e467]:
+          - strong [ref=f3e468]: 한봉석할머니순두부
+          - generic [ref=f3e469]: 경기 수원시 팔달구 행궁로 71
+          - generic [ref=f3e470]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e471]: ACCESS +
+      - button "운멜로 1호점 경기 수원시 팔달구 화서문로32번길 4 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e472] [cursor=pointer]:
+        - generic [ref=f3e473]:
+          - strong [ref=f3e474]: 운멜로 1호점
+          - generic [ref=f3e475]: 경기 수원시 팔달구 화서문로32번길 4
+          - generic [ref=f3e476]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e477]: ACCESS +
+      - button "딥 경기 수원시 팔달구 화서문로72번길 19 방문 정보 확인 · 맛집 ACCESS +" [ref=f3e478] [cursor=pointer]:
+        - generic [ref=f3e479]:
+          - strong [ref=f3e480]: 딥
+          - generic [ref=f3e481]: 경기 수원시 팔달구 화서문로72번길 19
+          - generic [ref=f3e482]: 방문 정보 확인 · 맛집
+        - generic [ref=f3e483]: ACCESS +
+      - button "화성행궁 경기 수원시 팔달구 정조로 825 방문 정보 확인 · 명소 ACCESS +" [ref=f3e484] [cursor=pointer]:
+        - generic [ref=f3e485]:
+          - strong [ref=f3e486]: 화성행궁
+          - generic [ref=f3e487]: 경기 수원시 팔달구 정조로 825
+          - generic [ref=f3e488]: 방문 정보 확인 · 명소
+        - generic [ref=f3e489]: ACCESS +
+      - button "방화수류정 경기 수원시 팔달구 화성성곽길 233 방문 정보 확인 · 명소 ACCESS +" [ref=f3e490] [cursor=pointer]:
+        - generic [ref=f3e491]:
+          - strong [ref=f3e492]: 방화수류정
+          - generic [ref=f3e493]: 경기 수원시 팔달구 화성성곽길 233
+          - generic [ref=f3e494]: 방문 정보 확인 · 명소
+        - generic [ref=f3e495]: ACCESS +
+      - button "수원화성 화홍문 경기 수원시 팔달구 북수동 9000-1 방문 정보 확인 · 명소 ACCESS +" [ref=f3e496] [cursor=pointer]:
+        - generic [ref=f3e497]:
+          - strong [ref=f3e498]: 수원화성 화홍문
+          - generic [ref=f3e499]: 경기 수원시 팔달구 북수동 9000-1
+          - generic [ref=f3e500]: 방문 정보 확인 · 명소
+        - generic [ref=f3e501]: ACCESS +
+      - button "수원화성 장안문 경기 수원시 팔달구 정조로 910 방문 정보 확인 · 명소 ACCESS +" [ref=f3e502] [cursor=pointer]:
+        - generic [ref=f3e503]:
+          - strong [ref=f3e504]: 수원화성 장안문
+          - generic [ref=f3e505]: 경기 수원시 팔달구 정조로 910
+          - generic [ref=f3e506]: 방문 정보 확인 · 명소
+        - generic [ref=f3e507]: ACCESS +
+      - button "수원화성 화서문 경기 수원시 팔달구 장안동 331 방문 정보 확인 · 명소 ACCESS +" [ref=f3e508] [cursor=pointer]:
+        - generic [ref=f3e509]:
+          - strong [ref=f3e510]: 수원화성 화서문
+          - generic [ref=f3e511]: 경기 수원시 팔달구 장안동 331
+          - generic [ref=f3e512]: 방문 정보 확인 · 명소
+        - generic [ref=f3e513]: ACCESS +
+      - button "수원화성 팔달문 경기 수원시 팔달구 정조로 780 방문 정보 확인 · 명소 ACCESS +" [ref=f3e514] [cursor=pointer]:
+        - generic [ref=f3e515]:
+          - strong [ref=f3e516]: 수원화성 팔달문
+          - generic [ref=f3e517]: 경기 수원시 팔달구 정조로 780
+          - generic [ref=f3e518]: 방문 정보 확인 · 명소
+        - generic [ref=f3e519]: ACCESS +
+      - button "수원화성박물관 경기 수원시 팔달구 창룡대로 21 방문 정보 확인 · 명소 ACCESS +" [ref=f3e520] [cursor=pointer]:
+        - generic [ref=f3e521]:
+          - strong [ref=f3e522]: 수원화성박물관
+          - generic [ref=f3e523]: 경기 수원시 팔달구 창룡대로 21
+          - generic [ref=f3e524]: 방문 정보 확인 · 명소
+        - generic [ref=f3e525]: ACCESS +
+      - button "수원시립미술관 경기 수원시 팔달구 정조로 833 방문 정보 확인 · 명소 ACCESS +" [ref=f3e526] [cursor=pointer]:
+        - generic [ref=f3e527]:
+          - strong [ref=f3e528]: 수원시립미술관
+          - generic [ref=f3e529]: 경기 수원시 팔달구 정조로 833
+          - generic [ref=f3e530]: 방문 정보 확인 · 명소
+        - generic [ref=f3e531]: ACCESS +
+      - button "행궁동벽화마을 경기 수원시 팔달구 화서문로 82-6 방문 정보 확인 · 명소 ACCESS +" [ref=f3e532] [cursor=pointer]:
+        - generic [ref=f3e533]:
+          - strong [ref=f3e534]: 행궁동벽화마을
+          - generic [ref=f3e535]: 경기 수원시 팔달구 화서문로 82-6
+          - generic [ref=f3e536]: 방문 정보 확인 · 명소
+        - generic [ref=f3e537]: ACCESS +
+  - dialog [ref=f3e548]:
+    - button "닫기" [ref=f3e550] [cursor=pointer]: ✕
+    - generic [ref=f3e551]:
+      - paragraph [ref=f3e552]: MY PAGE
+      - button "개발자님 프로필 수정" [ref=f3e553] [cursor=pointer]:
+        - generic [ref=f3e554]:
+          - strong [ref=f3e555]: 개발자님
+          - generic [ref=f3e556]: 프로필 수정
+        - generic [aria-hidden] [ref=f3e557]: ›
+      - heading "커플" [level=3] [ref=f3e558]
+      - generic [ref=f3e559]:
+        - generic [ref=f3e560]: 내 초대 코드
+        - generic [ref=f3e561]:
+          - strong [ref=f3e562]: 6MHW6K
+          - button "복사" [ref=f3e563] [cursor=pointer]
+        - generic [ref=f3e564]:
+          - generic [ref=f3e565]: 연인의 초대 코드
+          - generic [ref=f3e566]:
+            - textbox "연인의 초대 코드" [active] [ref=f3e567]:
+              - /placeholder: ABC123
+              - text: 6MHW6K
+            - button "요청" [ref=f3e568] [cursor=pointer]
+        - alert [ref=f3e572]: 내 초대 코드는 입력할 수 없어요.
+      - heading "계정" [level=3] [ref=f3e569]
+      - button "로그아웃" [ref=f3e571] [cursor=pointer]
+  - navigation "메인 메뉴" [ref=f3e538]:
+    - button "🗺 지도" [ref=f3e539] [cursor=pointer]:
+      - generic [ref=f3e540]: 🗺
+      - text: 지도
+    - button "♡ 찜" [disabled] [ref=f3e541]:
+      - generic [ref=f3e542]: ♡
+      - text: 찜
+    - button "✓ 인증" [disabled] [ref=f3e543]:
+      - generic [ref=f3e544]: ✓
+      - text: 인증
+    - button "☺ MY" [ref=f3e545] [cursor=pointer]:
+      - generic [ref=f3e546]: ☺
+      - text: MY

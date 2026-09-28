@@ -7,6 +7,7 @@ import DetailSheet from './components/DetailSheet.jsx';
 import TabBar from './components/TabBar.jsx';
 import AccountSheet from './components/AccountSheet.jsx';
 import { useAuth } from './hooks/useAuth.js';
+import { useProfile } from './hooks/useProfile.js';
 
 // App = 앱 전체의 '지휘자' 컴포넌트입니다.
 // 모든 상태(state)를 여기서 관리하고, 필요한 값과 함수를 자식 컴포넌트에 props로 나눠 줍니다.
@@ -26,6 +27,11 @@ export default function App() {
 
   // 로그인 관련 상태와 함수는 useAuth 훅이 한꺼번에 관리합니다.
   const { user, isAuthLoading, authError, signInWithKakao, signOut } = useAuth();
+
+  // 프로필·커플·커플 요청 데이터는 App에서 불러옵니다.
+  // 마이페이지(AccountSheet)뿐 아니라 탭 바도 "받은 요청이 있는지"를 알아야 빨간 점을 띄울 수 있기 때문입니다.
+  const profileState = useProfile(user);
+  const hasNewRequest = profileState.requests.incoming.length > 0;
 
   // 로그인 에러가 생기면(예: 카카오 동의 화면에서 실패하고 돌아옴) MY 시트를 열어 에러 문구를 보여줍니다.
   useEffect(() => {
@@ -129,10 +135,12 @@ export default function App() {
         authError={authError}
         onLogin={signInWithKakao}
         onLogout={signOut}
+        profileState={profileState}
       />
       <TabBar
         activeTab={isAccountOpen ? 'my' : 'map'}
         onSelectTab={handleSelectTab}
+        hasMyAlert={hasNewRequest}
       />
     </div>
   );

@@ -3,7 +3,6 @@ import BottomSheet from './BottomSheet.jsx';
 import Avatar from './Avatar.jsx';
 import ProfileEditor from './ProfileEditor.jsx';
 import CoupleCard from './CoupleCard.jsx';
-import { useProfile } from '../hooks/useProfile.js';
 
 // 하단 탭의 'MY'를 누르면 열리는 마이페이지입니다.
 //  - 로그인 전: 카카오 로그인 버튼
@@ -14,9 +13,12 @@ import { useProfile } from '../hooks/useProfile.js';
 //  - isAuthLoading: 로그인 여부 확인 중인지
 //  - authError: 로그인 관련 에러 문구
 //  - onLogin, onLogout: 로그인/로그아웃 함수
-export default function AccountSheet({ open, onClose, user, isAuthLoading, authError, onLogin, onLogout }) {
-  // 프로필·커플 데이터와 수정 함수는 useProfile 훅에서 가져옵니다.
-  const { profile, couple, isLoading, loadError, refresh, updateProfile, connectCouple, disconnectCouple } = useProfile(user);
+//  - profileState: App에서 useProfile(user)로 만든 프로필·커플·요청 데이터와 함수 묶음
+export default function AccountSheet({ open, onClose, user, isAuthLoading, authError, onLogin, onLogout, profileState }) {
+  const {
+    profile, couple, requests, isLoading, loadError, refresh, updateProfile,
+    sendRequest, acceptRequest, rejectRequest, cancelRequest, disconnectCouple,
+  } = profileState;
 
   // 지금 보여줄 화면: 'main'(메인) 또는 'edit'(프로필 수정)
   const [view, setView] = useState('main');
@@ -90,7 +92,11 @@ export default function AccountSheet({ open, onClose, user, isAuthLoading, authE
         <CoupleCard
           inviteCode={profile.invite_code}
           couple={couple}
-          onConnect={connectCouple}
+          requests={requests}
+          onSendRequest={sendRequest}
+          onAcceptRequest={acceptRequest}
+          onRejectRequest={rejectRequest}
+          onCancelRequest={cancelRequest}
           onDisconnect={disconnectCouple}
         />
 

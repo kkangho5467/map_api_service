@@ -30,10 +30,11 @@
 
 | 스킬 | 파일 위치 | 역할 | 언제 자동으로 쓰이나 |
 |---|---|---|---|
+| `feature-kickoff` | `.claude/skills/feature-kickoff/SKILL.md` | 새 기능 시작 시 정책을 선택지로 묻고 스킬·MCP 포함 계획 수립 | "○○ 만들자", "다음 작업 진행하자" |
 | `supabase-migration` | `.claude/skills/supabase-migration/SKILL.md` | DB 변경을 안전한 SQL 파일로 작성 (RLS 필수) | 테이블·정책·함수 추가/변경 |
 | `security-checklist` | `.claude/skills/security-checklist/SKILL.md` | 키 노출·XSS·RLS·에러 처리 점검 | "보안 점검", "커밋 전", "배포해도 돼?" |
 | `verify-app` | `.claude/skills/verify-app/SKILL.md` | 빌드 + 5173 포트 + 모바일 화면 확인 | "확인해줘", "화면 봐줘", 화면 수정 후 |
-| `progress-log` | `.claude/skills/progress-log/SKILL.md` | `PROGRESS_LOG.md` 작업 일지 갱신 | "기록해줘", 새 채팅 시작 시 |
+| `progress-log` | `.claude/skills/progress-log/SKILL.md` | `PROGRESS_LOG.md` 작업 일지 + `docs/features/` 설명 노트 | "기록해줘", 새 채팅 시작 시 |
 
 ---
 
@@ -76,13 +77,15 @@
 
 **MCP = Claude가 외부 서비스에 직접 접속하는 연결 통로**입니다. 스킬이 "매뉴얼"이라면 MCP는 "출입증"이에요.
 
-| MCP | 역할 | 함께 쓰는 스킬 |
-|---|---|---|
-| Supabase | 실제 DB 테이블·정책 조회, SQL 실행 | `supabase-migration` (작성 후 충돌 확인) |
-| Playwright (연결 시) | 브라우저를 띄워 화면 캡처 | `verify-app` (화면 확인) |
+| MCP | 범위 | 역할 | 함께 쓰는 스킬 |
+|---|---|---|---|
+| Supabase | claude.ai 커넥터 | 실제 DB 테이블·정책 조회, SQL 실행 | `supabase-migration` (작성 후 충돌 확인) |
+| Playwright | user (모든 프로젝트) | 브라우저를 띄워 클릭·화면 캡처·콘솔 확인 | `verify-app` (화면 확인) |
+| Context7 | user (모든 프로젝트) | 라이브러리 최신 공식 문서 검색 | `supabase-migration`, 코드 작성 전반 |
 
 - 현재 연결된 Supabase 프로젝트: `flmaxtnszpvivuahwxqs` (서울)
 - 연결 상태 확인: 채팅창에 `/mcp`
+- ⚠️ Karpathy Skills는 이름에 "Skills"가 있지만 MCP가 아니라 **② 플러그인 스킬**입니다. 반대로 Playwright·Context7은 이름과 상관없이 **스킬이 아닌 MCP**입니다.
 
 ---
 

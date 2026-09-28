@@ -5,6 +5,29 @@ import { resizeImageToSquare } from '../lib/image.js';
 const AVATAR_BUCKET = 'avatars';
 const PROFILE_COLUMNS = 'id, nickname, avatar_url, invite_code';
 
+// 커플 요청 조회용 컬럼
+// sender:profiles!couple_requests_sender_id_fkey(...) = "sender_id 외래키로 연결된 profiles 행을 sender라는 이름으로 함께 가져와"
+// (couple_requests가 profiles를 두 번 참조해서, 어떤 외래키로 연결할지 이름으로 지정해야 합니다)
+const REQUEST_COLUMNS = `
+  id, sender_id, receiver_id, created_at,
+  sender:profiles!couple_requests_sender_id_fkey(nickname, avatar_url),
+  receiver:profiles!couple_requests_receiver_id_fkey(nickname, avatar_url)
+`;
+
+// 요청이 없을 때의 기본값 (incoming: 받은 요청 목록, outgoing: 내가 보낸 요청 1개 또는 null)
+const EMPTY_REQUESTS = { incoming: [], outgoing: null };
+
+// DB 함수(rpc)를 호출하고, 실패하면 DB가 보낸 한글 문구로 에러를 던지는 공통 함수입니다.
+const callRpc = async (name, params, fallbackMessage) => {
+  const { data, error } = await supabase.rpc(name, params);
+  if (error) {
+    console.error(`${name} 실패:`, error);
+    // DB 함수가 raise exception으로 보낸 한글 문구를 그대로 사용자에게 보여줍니다.
+    throw new Error(error.message || fallbackMessage);
+  }
+  return data;
+};
+
 // 저장소 공개 주소에서 '버킷 안의 파일 경로'만 뽑아냅니다. (이전 사진을 지울 때 사용)
 // 예) https://xxx.supabase.co/storage/v1/object/public/avatars/유저id/avatar-1.jpg → 유저id/avatar-1.jpg
 // 카카오 프로필 사진처럼 우리 저장소 주소가 아니면 null을 돌려줘서 지우지 않습니다.
@@ -20,6 +43,7 @@ export const useProfile = (user) => {
   const userId = user?.id;
   const [profile, setProfile] = useState(null);   // { id, nickname, avatar_url, invite_code }
   const [couple, setCouple] = useState(null);     // { id, createdAt, partner: { nickname, avatar_url } } 또는 null
+  const [requests, setRequests] = useState(EMPTY_REQUESTS); // 대기 중인 커플 요청
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState(null);
 
@@ -29,6 +53,7 @@ export const useProfile = (user) => {
     if (!userId) {
       setProfile(null);
       setCouple(null);
+      setRequests(EMPTY_REQUESTS);
       return;
     }
 
@@ -69,8 +94,25 @@ export const useProfile = (user) => {
         };
       }
 
+      // ④ 커플이 아직 없으면 대기 중인 요청(받은 것·보낸 것)을 가져옵니다.
+      //    RLS 덕분에 '내가 보냈거나 받은 요청'만 돌아옵니다. (커플이 되면 DB가 요청을 모두 지움)
+      let nextRequests = EMPTY_REQUESTS;
+      if (!membership) {
+        const { data: requestRows, error: requestError } = await supabase
+          .from('couple_requests')
+          .select(REQUEST_COLUMNS)
+          .order('created_at', { ascending: false }); // 최신 요청이 위로
+        if (requestError) throw requestError;
+
+        nextRequests = {
+          incoming: requestRows.filter((row) => row.receiver_id === userId),
+          outgoing: requestRows.find((row) => row.sender_id === userId) ?? null,
+        };
+      }
+
       setProfile(me);
       setCouple(nextCouple);
+      setRequests(nextRequests);
     } catch (error) {
       console.error('프로필 조회 실패:', error);
       setLoadError('프로필 정보를 불러오지 못했어요.');
@@ -82,6 +124,17 @@ export const useProfile = (user) => {
   // 로그인한 사용자가 바뀔 때마다(로그인/로그아웃) 다시 읽어 옵니다.
   useEffect(() => {
     refresh();
+  }, [refresh]);
+
+  // 다른 앱을 보다가 돌아왔을 때(탭이 다시 보일 때) 새 요청이 왔는지 다시 확인합니다.
+  // 실시간 알림 대신 쓰는 간단한 방법입니다. (탭 바의 빨간 점이 최신 상태가 되도록)
+  useEffect(() => {
+    const handleVisible = () => {
+      if (document.visibilityState === 'visible') refresh();
+    };
+    document.addEventListener('visibilitychange', handleVisible);
+    // 컴포넌트가 사라질 때 이벤트 연결을 해제합니다. (메모리 누수 방지)
+    return () => document.removeEventListener('visibilitychange', handleVisible);
   }, [refresh]);
 
   // 프로필 수정: 닉네임 + (선택) 새 사진 파일
@@ -128,26 +181,40 @@ export const useProfile = (user) => {
     }
   }, [profile, userId]);
 
-  // 초대 코드로 커플 연결 (DB 함수 connect_couple 호출)
-  const connectCouple = useCallback(async (code) => {
-    const { error } = await supabase.rpc('connect_couple', { partner_code: code });
-    if (error) {
-      console.error('커플 연결 실패:', error);
-      // DB 함수가 raise exception으로 보낸 한글 문구를 그대로 사용자에게 보여줍니다.
-      throw new Error(error.message || '커플 연결에 실패했어요.');
-    }
+  // 초대 코드로 커플 요청 보내기 (DB 함수 send_couple_request 호출)
+  // 돌려주는 값: 'sent'(요청 보냄) 또는 'connected'(상대도 나에게 요청해 둬서 바로 연결됨)
+  const sendRequest = useCallback(async (code) => {
+    const result = await callRpc('send_couple_request', { partner_code: code }, '요청을 보내지 못했어요.');
+    await refresh();
+    return result;
+  }, [refresh]);
+
+  // 받은 요청 수락 → 커플 성립
+  const acceptRequest = useCallback(async (requestId) => {
+    await callRpc('accept_couple_request', { request_id: requestId }, '요청을 수락하지 못했어요.');
+    await refresh();
+  }, [refresh]);
+
+  // 받은 요청 거절 → 요청이 조용히 사라짐
+  const rejectRequest = useCallback(async (requestId) => {
+    await callRpc('reject_couple_request', { request_id: requestId }, '요청을 거절하지 못했어요.');
+    await refresh();
+  }, [refresh]);
+
+  // 내가 보낸 요청 취소
+  const cancelRequest = useCallback(async () => {
+    await callRpc('cancel_couple_request', {}, '요청을 취소하지 못했어요.');
     await refresh();
   }, [refresh]);
 
   // 커플 연결 해제 (DB 함수 disconnect_couple 호출)
   const disconnectCouple = useCallback(async () => {
-    const { error } = await supabase.rpc('disconnect_couple');
-    if (error) {
-      console.error('커플 해제 실패:', error);
-      throw new Error(error.message || '연결을 해제하지 못했어요.');
-    }
+    await callRpc('disconnect_couple', {}, '연결을 해제하지 못했어요.');
     await refresh();
   }, [refresh]);
 
-  return { profile, couple, isLoading, loadError, refresh, updateProfile, connectCouple, disconnectCouple };
+  return {
+    profile, couple, requests, isLoading, loadError, refresh, updateProfile,
+    sendRequest, acceptRequest, rejectRequest, cancelRequest, disconnectCouple,
+  };
 };

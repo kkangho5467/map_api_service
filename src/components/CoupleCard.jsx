@@ -13,16 +13,36 @@ const getDaysTogether = (createdAt) => {
 };
 
 // 마이페이지의 커플 영역
-//  - 연결 전: 내 초대 코드 복사 + 상대 코드 입력 → 연결
+//  - 연결 전: 받은 요청(수락/거절) + 내 초대 코드 복사 + [상대 코드 입력 → 요청 보내기] 또는 [보낸 요청 대기·취소]
 //  - 연결 후: 연인 프로필 + D+N + 연결 해제
 // props:
 //  - inviteCode: 내 초대 코드
 //  - couple: 커플 정보 (없으면 null)
-//  - onConnect(code), onDisconnect(): 실패 시 에러를 던지는 함수
-export default function CoupleCard({ inviteCode, couple, onConnect, onDisconnect }) {
+//  - requests: { incoming: 받은 요청 목록, outgoing: 내가 보낸 요청 또는 null }
+//  - onSendRequest(code), onAcceptRequest(id), onRejectRequest(id), onCancelRequest(), onDisconnect()
+//    : 모두 실패하면 에러를 던지는 함수
+export default function CoupleCard({
+  inviteCode, couple, requests,
+  onSendRequest, onAcceptRequest, onRejectRequest, onCancelRequest, onDisconnect,
+}) {
   const [codeInput, setCodeInput] = useState('');
   const [isBusy, setIsBusy] = useState(false);      // 요청 중에는 버튼을 잠가 중복 클릭을 막습니다.
   const [message, setMessage] = useState(null);     // { type: 'error' | 'info', text }
+
+  // 버튼 동작 공통 처리: 버튼 잠금 → 실행 → 실패하면 에러 문구 → 버튼 풀기
+  // action이 성공 안내 문구(문자열)를 돌려주면 초록 안내로 보여줍니다.
+  const runAction = async (action) => {
+    setIsBusy(true);
+    setMessage(null);
+    try {
+      const infoText = await action();
+      if (infoText) setMessage({ type: 'info', text: infoText });
+    } catch (error) {
+      setMessage({ type: 'error', text: error.message });
+    } finally {
+      setIsBusy(false);
+    }
+  };
 
   const copyCode = async () => {
     try {
@@ -35,7 +55,7 @@ export default function CoupleCard({ inviteCode, couple, onConnect, onDisconnect
     }
   };
 
-  const handleConnect = async (event) => {
+  const handleSendRequest = (event) => {
     event.preventDefault();
     const code = codeInput.trim().toUpperCase();
     if (code.length !== 6) {
@@ -43,31 +63,27 @@ export default function CoupleCard({ inviteCode, couple, onConnect, onDisconnect
       return;
     }
 
-    setIsBusy(true);
-    setMessage(null);
-    try {
-      await onConnect(code);
+    runAction(async () => {
+      const result = await onSendRequest(code);
       setCodeInput('');
-    } catch (error) {
-      setMessage({ type: 'error', text: error.message });
-    } finally {
-      setIsBusy(false);
-    }
+      // 'connected'면 상대도 나에게 요청해 둔 상태라 바로 연결됨 → 카드가 연결 화면으로 바뀝니다.
+      return result === 'sent' ? '요청을 보냈어요! 상대가 수락하면 연결돼요.' : null;
+    });
   };
 
-  const handleDisconnect = async () => {
-    // 되돌릴 수 없는 동작이라 한 번 더 확인합니다.
-    if (!window.confirm('정말 커플 연결을 해제할까요?\n다시 연결하려면 초대 코드를 새로 입력해야 해요.')) return;
+  const handleCancelRequest = () => {
+    runAction(async () => {
+      await onCancelRequest();
+      return '요청을 취소했어요.';
+    });
+  };
 
-    setIsBusy(true);
-    setMessage(null);
-    try {
+  const handleDisconnect = () => {
+    // 되돌릴 수 없는 동작이라 한 번 더 확인합니다.
+    if (!window.confirm('정말 커플 연결을 해제할까요?\n다시 연결하려면 커플 요청을 새로 보내야 해요.')) return;
+    runAction(async () => {
       await onDisconnect();
-    } catch (error) {
-      setMessage({ type: 'error', text: error.message });
-    } finally {
-      setIsBusy(false);
-    }
+    });
   };
 
   // 공통: 안내/에러 문구
@@ -98,34 +114,86 @@ export default function CoupleCard({ inviteCode, couple, onConnect, onDisconnect
   }
 
   // ─── 연결 전 상태 ───
+  const { incoming, outgoing } = requests;
+
   return (
     <div className="card">
+      {/* ① 받은 요청: 있을 때만 맨 위에 보여줍니다. */}
+      {incoming.length > 0 && (
+        <div className="request-list">
+          <span className="field-label">💌 받은 커플 요청</span>
+          {incoming.map((request) => (
+            <div className="request-item" key={request.id}>
+              <Avatar url={request.sender?.avatar_url} size={40} />
+              <p className="request-text">
+                <strong>{request.sender?.nickname ?? '알 수 없는 사용자'}</strong>님이 커플 요청을 보냈어요
+              </p>
+              <div className="request-actions">
+                <button
+                  className="chip-button primary"
+                  type="button"
+                  disabled={isBusy}
+                  onClick={() => runAction(() => onAcceptRequest(request.id))}
+                >
+                  수락
+                </button>
+                <button
+                  className="chip-button"
+                  type="button"
+                  disabled={isBusy}
+                  onClick={() => runAction(() => onRejectRequest(request.id))}
+                >
+                  거절
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* ② 내 초대 코드 */}
       <span className="field-label">내 초대 코드</span>
       <div className="invite-row">
         <strong className="invite-code">{inviteCode}</strong>
         <button className="chip-button" type="button" onClick={copyCode}>복사</button>
       </div>
 
-      <form className="connect-form" onSubmit={handleConnect}>
-        <label className="field-label" htmlFor="partner-code">연인의 초대 코드</label>
-        <div className="invite-row">
-          <input
-            id="partner-code"
-            className="text-input code-input"
-            type="text"
-            inputMode="text"
-            autoCapitalize="characters"   // 모바일 키보드를 대문자로 시작
-            autoComplete="off"
-            maxLength={6}
-            placeholder="ABC123"
-            value={codeInput}
-            onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
-          />
-          <button className="chip-button primary" type="submit" disabled={isBusy}>
-            {isBusy ? '연결 중…' : '연결'}
-          </button>
+      {/* ③ 보낸 요청이 있으면 '대기 중', 없으면 코드 입력 폼 */}
+      {outgoing ? (
+        <div className="connect-form">
+          <span className="field-label">보낸 요청</span>
+          <div className="request-item">
+            <Avatar url={outgoing.receiver?.avatar_url} size={40} />
+            <p className="request-text">
+              <strong>{outgoing.receiver?.nickname ?? '알 수 없는 사용자'}</strong>님의 수락을 기다리는 중이에요
+            </p>
+            <button className="chip-button" type="button" disabled={isBusy} onClick={handleCancelRequest}>
+              취소
+            </button>
+          </div>
         </div>
-      </form>
+      ) : (
+        <form className="connect-form" onSubmit={handleSendRequest}>
+          <label className="field-label" htmlFor="partner-code">연인의 초대 코드</label>
+          <div className="invite-row">
+            <input
+              id="partner-code"
+              className="text-input code-input"
+              type="text"
+              inputMode="text"
+              autoCapitalize="characters"   // 모바일 키보드를 대문자로 시작
+              autoComplete="off"
+              maxLength={6}
+              placeholder="ABC123"
+              value={codeInput}
+              onChange={(event) => setCodeInput(event.target.value.toUpperCase())}
+            />
+            <button className="chip-button primary" type="submit" disabled={isBusy}>
+              {isBusy ? '보내는 중…' : '요청'}
+            </button>
+          </div>
+        </form>
+      )}
       {messageElement}
     </div>
   );

@@ -1,0 +1,31 @@
+- generic [ref=e3]:
+  - generic "장소 지도" [ref=e4]
+  - banner:
+    - generic [ref=e5]:
+      - link "POP·PIN" [ref=e6] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e7]: 📍 수원 행궁동
+    - tablist "장소 카테고리" [ref=e8]:
+      - tab "전체" [selected] [ref=e9] [cursor=pointer]
+      - tab "🍽 맛집" [ref=e10] [cursor=pointer]
+      - tab "☕ 카페" [ref=e11] [cursor=pointer]
+      - tab "📸 명소" [ref=e12] [cursor=pointer]
+    - generic [ref=e13]: LOADING
+  - region "장소 목록" [ref=e14]:
+    - button "오늘의 데이트 큐레이션 불러오는 중" [ref=e15] [cursor=pointer]:
+      - generic [ref=e16]:
+        - strong [ref=e17]: 오늘의 데이트 큐레이션
+        - generic [ref=e18]: 불러오는 중
+  - navigation "메인 메뉴" [ref=e20]:
+    - button "🗺 지도" [ref=e21] [cursor=pointer]:
+      - generic [ref=e22]: 🗺
+      - text: 지도
+    - button "♡ 찜" [disabled] [ref=e23]:
+      - generic [ref=e24]: ♡
+      - text: 찜
+    - button "✓ 인증" [disabled] [ref=e25]:
+      - generic [ref=e26]: ✓
+      - text: 인증
+    - button "☺ MY" [ref=e27] [cursor=pointer]:
+      - generic [ref=e28]: ☺
+      - text: MY
