@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.kkangho.datemap",
+    "sha256_cert_fingerprints": ["27:E9:54:1B:B0:6B:B2:23:42:C8:1F:DD:A5:98:F4:11:96:18:5F:D7:6E:39:2E:E6:67:42:00:58:91:72:31:31"]
+  }
+}]
