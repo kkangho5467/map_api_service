@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { supabase } from '../lib/supabaseClient.js';
 import { resizeImageToSquare } from '../lib/image.js';
 
@@ -136,6 +136,53 @@ export const useProfile = (user) => {
     // 컴포넌트가 사라질 때 이벤트 연결을 해제합니다. (메모리 누수 방지)
     return () => document.removeEventListener('visibilitychange', handleVisible);
   }, [refresh]);
+
+  // 지금 화면에 있는 요청 id 목록. 실시간 삭제 알림이 '내 요청'인지 확인할 때 씁니다.
+  // useRef: 값이 바뀌어도 화면을 다시 그리지 않고, 구독을 다시 만들지 않아도 최신 값을 읽을 수 있는 상자입니다.
+  const myRequestIdsRef = useRef(new Set());
+  useEffect(() => {
+    const ids = requests.incoming.map((request) => request.id);
+    if (requests.outgoing) ids.push(requests.outgoing.id);
+    myRequestIdsRef.current = new Set(ids);
+  }, [requests]);
+
+  // 실시간 구독 (Supabase Realtime): DB가 바뀌는 순간 서버가 알려주면 refresh()로 다시 읽어 옵니다.
+  // ※ supabase/05_realtime_couple.sql 로 두 테이블을 발행 목록에 추가해야 알림이 옵니다.
+  useEffect(() => {
+    if (!userId) return undefined;
+
+    const channel = supabase
+      .channel(`couple-updates-${userId}`)
+      // ① 누군가 나에게 요청을 보냄 → 받은 요청 + 빨간 점
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'couple_requests', filter: `receiver_id=eq.${userId}` },
+        () => refresh(),
+      )
+      // ② 요청이 삭제됨(거절·취소·수락 후 정리) → 삭제 알림은 모든 구독자에게 id만 오므로 '내 요청'일 때만 반영
+      .on(
+        'postgres_changes',
+        { event: 'DELETE', schema: 'public', table: 'couple_requests' },
+        (payload) => {
+          if (myRequestIdsRef.current.has(payload.old?.id)) refresh();
+        },
+      )
+      // ③ 내가 커플 멤버로 추가됨(상대가 내 요청을 수락) → 연결 화면으로 전환
+      .on(
+        'postgres_changes',
+        { event: 'INSERT', schema: 'public', table: 'couple_members', filter: `user_id=eq.${userId}` },
+        () => refresh(),
+      )
+      .subscribe((status, error) => {
+        // 연결 실패해도 앱은 동작합니다. (마이페이지를 열거나 앱으로 돌아오면 다시 조회하므로)
+        if (error) console.warn('실시간 연결 실패:', status, error);
+      });
+
+    // 로그아웃하거나 사용자가 바뀌면 구독을 해제합니다. (메모리 누수·중복 알림 방지)
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [userId, refresh]);
 
   // 프로필 수정: 닉네임 + (선택) 새 사진 파일
   const updateProfile = useCallback(async ({ nickname, avatarFile }) => {

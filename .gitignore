@@ -15,3 +15,5 @@ dist/
 # OS 및 에디터 임시 파일
 .DS_Store
 .vscode/
+# Playwright MCP 테스트 결과물 (화면 캡처·콘솔 로그, 커밋하지 않음)
+.playwright-mcp/
