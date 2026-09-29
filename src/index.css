@@ -1,14 +1,18 @@
 /* ───────── 1. 디자인 토큰(색상·크기 변수) ───────── */
+/* 밝은 테마 하나만 씁니다.
+   color-scheme: only light → "이 앱은 밝은 화면 전용"이라고 브라우저에 알려서,
+   휴대폰이 다크모드여도 브라우저가 색을 멋대로 어둡게 바꾸지(자동 다크 모드) 않게 합니다. */
 :root {
-  color-scheme: dark;
-  --ink: #f5f1e8;          /* 기본 글자색 */
-  --muted: #a8b0ae;        /* 보조 글자색 */
-  --paper: #111817;        /* 앱 배경 */
-  --panel: #18211f;        /* 시트(카드) 배경 */
-  --panel-soft: #202b28;   /* 선택된 카드 배경 */
-  --line: #30403b;         /* 구분선 */
-  --accent: #f1b56a;       /* 강조색(버튼, 선택된 필터) */
-  --blue: #88b9c7;
+  color-scheme: only light;
+  --ink: #1f2523;          /* 기본 글자색 (거의 검정) */
+  --muted: #6b7471;        /* 보조 글자색 (회색) */
+  --paper: #faf8f3;        /* 앱 배경 (따뜻한 흰색) */
+  --panel: #ffffff;        /* 시트(카드) 배경 */
+  --panel-soft: #f3f0e9;   /* 선택된 카드·상자 배경 */
+  --line: #e2ddd3;         /* 구분선 */
+  --accent: #f1b56a;       /* 강조색 '배경'(버튼, 선택된 필터) */
+  --accent-ink: #b06a12;   /* 강조색 '글자'. 흰 배경에서 --accent 글자는 흐려서 더 진하게 */
+  --blue: #2f7f96;
   --tabbar-h: 64px;        /* 하단 탭 바 높이 */
   --sheet-peek: 168px;     /* 목록 시트가 접혔을 때 보이는 높이 */
   /* 아이폰 홈바 영역 높이(없는 기기는 0) */
@@ -31,7 +35,7 @@ html, body {
 
 body {
   color: var(--ink);
-  background: #0a0f0e;
+  background: #ebe7df; /* PC에서 앱(480px) 바깥 여백 색 */
   font-family: "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
   /* 당겨서 새로고침(바운스) 동작이 지도 조작을 방해하지 않게 합니다. */
   overscroll-behavior: none;
@@ -68,8 +72,8 @@ button {
   right: 0;
   z-index: 10;
   padding: calc(12px + var(--safe-top)) 16px 0;
-  /* 위쪽을 살짝 어둡게 그라데이션 처리해 지도 위에서도 글자가 잘 보이게 합니다. */
-  background: linear-gradient(to bottom, rgba(17, 24, 23, 0.92) 55%, rgba(17, 24, 23, 0));
+  /* 위쪽을 밝게 그라데이션 처리해 지도 위에서도 글자가 잘 보이게 합니다. */
+  background: linear-gradient(to bottom, rgba(250, 248, 243, 0.95) 55%, rgba(250, 248, 243, 0));
   pointer-events: none; /* 투명 영역을 터치해도 지도가 움직이도록 통과시킵니다. */
 }
 
@@ -94,7 +98,7 @@ button {
 }
 
 .brand span {
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 .area-chip {
@@ -130,10 +134,10 @@ button {
   border: 1px solid var(--line);
   border-radius: 999px;
   color: var(--ink);
-  background: rgba(24, 33, 31, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   font-size: 0.85rem;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .filter[aria-selected="true"] {
@@ -148,8 +152,8 @@ button {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
-  color: #18211f;
-  background: rgba(255, 253, 247, 0.9);
+  color: var(--muted);
+  background: rgba(255, 255, 255, 0.9);
   font-size: 0.68rem;
   font-weight: 800;
 }
@@ -167,7 +171,7 @@ button {
   height: 72dvh;
   border-radius: 20px 20px 0 0;
   background: var(--panel);
-  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 -8px 30px rgba(0, 0, 0, 0.12);
   transform: translateY(calc(100% - var(--sheet-peek)));
   transition: transform 280ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
@@ -267,7 +271,7 @@ button {
 
 .place-card .tagline {
   margin-top: 8px;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.74rem;
 }
 
@@ -285,7 +289,7 @@ button {
   position: absolute;
   inset: 0;
   z-index: 40;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   pointer-events: none; /* 닫혀 있을 땐 터치를 막지 않도록 */
   transition: opacity 240ms ease;
@@ -308,7 +312,7 @@ button {
   max-height: 85dvh;
   border-radius: 22px 22px 0 0;
   background: var(--panel);
-  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.18);
   transform: translateY(100%);
   transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1);
   visibility: hidden; /* 닫힌 상태에서 스크린리더/탭 이동에 잡히지 않게 */
@@ -361,7 +365,7 @@ button {
 
 .detail-kicker {
   margin: 0 0 8px;
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.7rem;
   font-weight: 800;
   letter-spacing: 0.14em;
@@ -589,7 +593,7 @@ button {
 }
 
 .tab[aria-current="page"] {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-weight: 800;
 }
 
@@ -708,8 +712,8 @@ button {
   margin: 14px 0 0;
   padding: 12px;
   border-radius: 10px;
-  color: #ffb4b4;
-  background: rgba(255, 80, 80, 0.12);
+  color: #c62828;
+  background: rgba(229, 57, 53, 0.08);
   font-size: 0.8rem;
   line-height: 1.5;
 }
@@ -834,7 +838,7 @@ button {
 .partner-days {
   display: block;
   margin-top: 4px;
-  color: #ff6f91;
+  color: #e0456b;
   font-size: 0.8rem;
   font-weight: 800;
 }
@@ -853,7 +857,7 @@ button {
 }
 
 .text-button.danger {
-  color: #ff8a8a;
+  color: #d93636;
 }
 
 .menu-list {
@@ -875,7 +879,7 @@ button {
 
 .form-info {
   margin: 12px 0 0;
-  color: var(--mint, #b9d9c4);
+  color: #2e7d4f; /* 안내(성공) 문구: 초록 */
   font-size: 0.8rem;
 }
 
@@ -890,7 +894,7 @@ button {
 }
 
 .avatar-picker-text {
-  color: var(--accent);
+  color: var(--accent-ink);
   font-size: 0.82rem;
   font-weight: 700;
 }

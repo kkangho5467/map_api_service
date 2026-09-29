@@ -5,7 +5,10 @@
   <!-- viewport-fit=cover: 아이폰 노치/홈바 영역까지 화면을 채우고, 안전 영역은 CSS env()로 직접 비워 줍니다. -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <!-- 모바일 브라우저 상단 주소창 색을 앱 배경색과 맞춥니다. -->
-  <meta name="theme-color" content="#111817">
+  <meta name="theme-color" content="#faf8f3">
+  <!-- "밝은 화면 전용" 선언. 휴대폰이 다크모드여도 브라우저가 색을 자동으로 어둡게 바꾸지 않게 합니다.
+       (CSS의 color-scheme보다 먼저 읽혀서, 첫 화면이 잠깐 어둡게 깜빡이는 것도 막아 줍니다) -->
+  <meta name="color-scheme" content="only light">
   <meta name="description" content="커플 데이트 코스를 지도에서 함께 고르는 Pop-Pin">
   <!-- 앱 설치 정보(이름·아이콘·색). 안드로이드 앱(TWA)으로 만들 때도 이 파일을 읽습니다. -->
   <link rel="manifest" href="/manifest.webmanifest">
